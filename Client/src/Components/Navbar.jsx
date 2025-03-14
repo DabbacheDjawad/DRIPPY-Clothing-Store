@@ -47,23 +47,23 @@
             xl:relative xl:bg-white xl:text-black xl:top-auto xl:left-auto xl:max-h-fit xl:opacity-100 xl:w-[50%] `}>
 
                 <ul className="flex flex-col lg:flex-row xl:flex-row lg:gap-10 xl:gap-10 lg:ml-[15%] xl:ml-[15%]">
-                    <li className={`py-4 pl-[10%] font-medium hover:text-white hover:bg-[#ff6c00] hover:border-1
-                     hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
-                     lg:hover:border-none xl:hover:border-none transition-all
-                    `}>
-                    <Link to={"/"}>Home</Link></li>
+                    <Link to={"/"} className="py-4 pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                    hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
+                     lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
+                      onClick={handleIsOpen}>
+                     <li>Home</li></Link>
 
-                    <li className={`py-4 pl-[10%] font-medium hover:text-white hover:bg-[#ff6c00] hover:border-1
-                     hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
-                     lg:hover:border-none xl:hover:border-none transition-all
-                    `}>
-                        <Link to={"/Cart"}>Shopping Cart</Link></li>
+                    <Link to={"/Cart"} className="py-4 pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                    hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
+                     lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
+                     onClick={handleIsOpen}>
+                    <li>Shopping Cart</li></Link>
 
-                    <li className={`py-4 pl-[10%] font-medium hover:text-white hover:bg-[#ff6c00] hover:border-1
-                     hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
-                     lg:hover:border-none xl:hover:border-none transition-all
-                    `}>
-                        <Link to={"/Checkout"}>Checkout</Link></li>
+                    <Link to={"/Checkout"}className="py-4 pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                    hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
+                     lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
+                     onClick={handleIsOpen}>
+                    <li>Checkout</li></Link>
                 </ul>
             </div>
 

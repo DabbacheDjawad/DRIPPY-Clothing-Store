@@ -35,11 +35,15 @@ const product = products[productID.id];
 
 function handleAddToCart(){
     addToCart(product , quantity , prSize);
-    alert(`${product.name} Added to Cart Successfully!!`);
+    if(quantity > 0){
+      alert(`${product.name} Added to Cart Successfully!!`);
+    }else{
+      alert(`Can not enter negative or null quantity`);
+    }
   }
 
   return (
-    <div className="mt-20 overflow-hidden">
+    <div className="mt-40 overflow-hidden">
       {/* Item */}
       <div className="flex gap-5 relative left-[25%] max-sm:text-xs sm:text-lg">
           <p className="text-gray-400"><Link to={"/"}>Home &gt;</Link></p>
@@ -49,7 +53,7 @@ function handleAddToCart(){
 
 
       {/* Images */}
-      <div className="flex flex-col lg:flex-row mt-15 gap-10 xl:justify-center xl:gap-30">
+      <div className="flex flex-col lg:flex-row lg:mt-15 gap-10 xl:justify-center xl:gap-30">
         <div>
       <Swiper
       modules={[Navigation,Pagination]}

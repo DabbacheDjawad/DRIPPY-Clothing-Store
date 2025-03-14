@@ -14,7 +14,7 @@ const Home = () => {
 
   const [filters , setFilters] = useState(false)
   const [showMore , setShowMore] = useState(false)
-  const [count , setCount] = useState(6)
+  const [count , setCount] = useState(5)
   const [showValue , setShowValue] = useState("Show More");
   
   function handleFiltering(){
@@ -22,7 +22,7 @@ const Home = () => {
   }
 
   function handleCount(e){
-    showMore===true?setCount(products.length):setCount(6);
+    showMore===true?setCount(products.length):setCount(5);
     setShowMore(!showMore)
     showMore===true?setShowValue("Show Less"):setShowValue("Show More ");
   }
@@ -44,7 +44,7 @@ const Home = () => {
       </div>
 
     {/* Features */}
-    <Features className="mt-[40%] sm:mt-[30%] md:mt-[15%] xl:mt-[10%] gap-5" subClassName="w-[70%] sm:w-[40%] lg:w-[30%] text-center border-[#DCD7C9] border-1 rounded-lg bg-white"/>
+    <Features className="mt-[40%] max-sm:mt-[55%] sm:mt-[30%] md:mt-[15%] lg:mt-[25%] xl:mt-[18%] gap-5" subClassName="w-[70%] sm:w-[40%] lg:w-[30%] text-center border-[#DCD7C9] border-1 rounded-lg bg-white"/>
 
       
     {/* Products */}
@@ -52,7 +52,7 @@ const Home = () => {
           <div><h1 className="text-center text-3xl">Our Products</h1></div>
 
           <div className="flex w-full justify-center mt-7">
-            <input type="text" placeholder="Search for an item" className="border-1 rounded-lg py-2 outline-none text-center w-[50%]"/>
+            <input type="text" placeholder="Search for an item" className="border-1 border-gray-600 rounded-lg py-2 outline-none text-center w-[50%]"/>
             <button className="ml-10 cursor-pointer" onClick={handleFiltering}><IoFilter size={30} className="hover:text-[#ff6c00]" /></button>
             </div>
 
@@ -112,7 +112,7 @@ const Home = () => {
             <ul className="flex flex-wrap gap-5 justify-center items-center">
               {products && products.slice(0 , count).map((product , index)=>(
                 
-                  <li key={index}>
+                  <li key={index} className="hover:scale-105 transition-all duration-150">
                 <Link to={`/productDetails/${index}`}>
                 <LazyLoadImage
                 src={product.images[0]}

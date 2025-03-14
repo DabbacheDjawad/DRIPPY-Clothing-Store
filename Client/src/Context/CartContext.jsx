@@ -9,7 +9,9 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   const addToCart = (product, quantity , size) => {
-    setCart((prevCart) => [...prevCart, { ...product, quantity,size }]);
+    if(quantity > 0){
+      setCart((prevCart) => [...prevCart, { ...product, quantity,size }]);
+    }
   };
 
   return (
