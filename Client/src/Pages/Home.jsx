@@ -12,16 +12,74 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const mediumScreenShoe = "md:-rotate-90 xl:-rotate-0 lg:-rotate-0 2xl:rotate-0 md:mt-14 lg:mt-auto xl:mt-auto";
 
-  const [filters , setFilters] = useState(false)
+
   const [showMore , setShowMore] = useState(false)
   const [count , setCount] = useState(5)
   const [showValue , setShowValue] = useState("Show More");
   
+  //filters
+  const [filters , setFilters] = useState(false)
+  const [categoryFilter , setCategoryFilter] = useState("all");
+  const [priceFilter , setPriceFilter] = useState("all");
+  const [sizeFilter , setSizeFilter] = useState("all");
+
+  //sorting
+  const [sort , setSort] = useState("all");
+
+  //search 
+  const [search , setSearch] = useState("")
+  
+
   function handleFiltering(){
     setFilters(!filters);
   }
 
-  function handleCount(e){
+  function handleCategoryFilter(e){
+    setCategoryFilter(e.target.value);
+  }
+
+  function handlePriceFilter(e){
+    setPriceFilter(e.target.value);
+  }
+
+  function handleSizeFliter(e){
+    setSizeFilter(e.target.value);
+  }
+
+  function handleSorting(e){
+    setSort(e.target.value);
+  }
+
+  function handleSearch(e){
+    setSearch(e.target.value);
+  }
+
+  const filteredProducts = products.filter((product)=>{
+    const category = categoryFilter === "all" || product.category ===  categoryFilter;
+    
+    const productPrice = Number(product.price.split(" ")[0]);
+    let price = true;
+    if (priceFilter === "under-3000") {
+      price = productPrice < 3000;
+    } else if (priceFilter === "3000-9000") {
+      price = productPrice >= 3000 && productPrice <= 9000;
+    } else if (priceFilter === "over-9000") {
+      price = productPrice > 9000;
+    }
+
+    const size = sizeFilter === "all" || product.availableSizes.includes(sizeFilter);
+    const searching = product.name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
+
+    return category && price && size && searching;
+  })
+
+  //sorting
+  const sortedProducts = filteredProducts.sort((a, b) => {
+    if (sort === "price-ascending") return Number(a.price.split(" ")[0]) - Number(b.price.split(" ")[0]);
+    else if (sort === "price-descending") return Number(b.price.split(" ")[0]) - Number(a.price.split(" ")[0]);
+  });
+
+  function handleCount(){
     showMore===true?setCount(products.length):setCount(5);
     setShowMore(!showMore)
     showMore===true?setShowValue("Show Less"):setShowValue("Show More ");
@@ -52,7 +110,9 @@ const Home = () => {
           <div><h1 className="text-center text-3xl">Our Products</h1></div>
 
           <div className="flex w-full justify-center mt-7">
-            <input type="text" placeholder="Search for an item" className="border-1 border-gray-600 rounded-lg py-2 outline-none text-center w-[50%]"/>
+            {/* search */}
+            <input type="text" placeholder="Search for an item" onChange={handleSearch}
+             className="border-1 border-gray-600 rounded-lg py-2 outline-none text-center w-[50%]"/>
             <button className="ml-10 cursor-pointer" onClick={handleFiltering}><IoFilter size={30} className="hover:text-[#ff6c00]" /></button>
             </div>
 
@@ -62,7 +122,8 @@ const Home = () => {
             {/* Category */}
             <div className={`flex gap-5`}>
               <p className="w-20">Category : </p>
-              <select name="category" className="outline-none border-1 border-gray-400 rounded-sm px-2 w-35">
+              <select name="category" className="outline-none border-1 border-gray-400 rounded-sm px-2 w-35"
+              onChange={handleCategoryFilter}>
                 <option value="all" className="">All</option>
                 <option value="shirts">Shirts</option>
                 <option value="jackets">Jackets</option>
@@ -74,7 +135,8 @@ const Home = () => {
             {/* Price */}
             <div className="flex gap-5">
               <p className="w-20">Price : </p>
-              <select name="price" className="outline-none border-1 border-gray-400 rounded-sm w-35">
+              <select name="price" className="outline-none border-1 border-gray-400 rounded-sm w-35"
+              onChange={handlePriceFilter}>
                 <option value="all">All Prices</option>
                 <option value="under-3000">Under 3000 DZD</option>
                 <option value="3000-9000">3000-9000 DZD</option>
@@ -85,22 +147,24 @@ const Home = () => {
           {/* by Size */}
           <div className="flex gap-5">
               <p className="w-20">Size : </p>
-              <select name="size" className="outline-none border-1 border-gray-400 rounded-sm w-35">
+              <select name="size" className="outline-none border-1 border-gray-400 rounded-sm w-35"
+              onChange={handleSizeFliter}>
                 <option value="all">All</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
                 <option value="L">L</option>
                 <option value="XL">XL</option>
                 <option value="XXL">XXL</option>
-                <option value="XXXl">XXXL</option>
+                <option value="XXXL">XXXL</option>
               </select>
             </div>
 
           {/* sort by */}
           <div className="flex gap-5">
               <p className="w-20">Sort By : </p>
-              <select name="sort" className="outline-none border-1 border-gray-400 rounded-sm w-35">
-                <option value="latest">Latest</option>
+              <select name="sort" className="outline-none border-1 border-gray-400 rounded-sm w-35"
+              onChange={handleSorting}>
+                <option value="all">All</option>
                 <option value="price-ascending">price:Ascending</option>
                 <option value="price-descending">price:Descending</option>
               </select>
@@ -110,7 +174,7 @@ const Home = () => {
           {/* Products Display */}
           <div className="mt-20">
             <ul className="flex flex-wrap gap-5 justify-center items-center">
-              {products && products.slice(0 , count).map((product , index)=>(
+              {products && sortedProducts.slice(0 , count).map((product , index)=>(
                 
                   <li key={index} className="hover:scale-105 transition-all duration-150">
                 <Link to={`/productDetails/${index}`}>

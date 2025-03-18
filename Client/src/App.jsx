@@ -6,6 +6,8 @@ import Checkout from "./Pages/Checkout"
 import Navbar from "./Components/Navbar";
 import ProductDetails from "./Pages/ProductDetails"
 import { CartProvider } from "./Context/CartContext"
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
 function App() {
   return (
     <>
@@ -16,6 +18,8 @@ function App() {
           <Route path="/Checkout" element={<Checkout />}/>
           <Route path="/productDetails/:id" element={<ProductDetails />}></Route>
           <Route path="/Cart" element={<ShoppingCart />}/>
+          <Route path="/Login" element={<Login />}/>
+          <Route path="/Register" element={<Register />} />
         </Routes>
       </CartProvider>
     </>

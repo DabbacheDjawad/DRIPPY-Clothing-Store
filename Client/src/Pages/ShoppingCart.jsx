@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useCart } from "../Context/CartContext";
 import Button from "../Components/Button";
 import { Link } from "react-router-dom";
-const ShoppingCart = () => {
-  const { cart, setCart } = useCart(); 
+import { FaTrash } from "react-icons/fa";
 
+const ShoppingCart = () => {
+  const { cart, setCart } = useCart();
   const [quantities, setQuantities] = useState({});
 
   function handleQuantity(e, index) {
@@ -29,71 +30,74 @@ const ShoppingCart = () => {
   const totalPrice = calculateTotal();
 
   return (
-    <div className="mt-40 sm:text-xl md:text-xl">
-      <div className="text-center">
-        <h1>Shopping Cart</h1>
-      </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 py-20 mt-15">
+      <div className="bg-white p-8 rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] w-full max-w-6xl">
+        <h1 className="text-2xl font-bold text-center mb-6">Shopping Cart</h1>
 
-      <div>
         {cart.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <p className="text-center my-10 text-red-600">Your cart is empty.</p>
         ) : (
-          cart.map((item, index) => (
-            <div
-              key={index}
-              className="border border-gray-400 p-3 my-2 rounded-lg mb-10 max-sm:w-[90%] max-sm:ml-[5%] flex flex-col
-              md:flex-row md:items-center w-[90%] ml-[5%]"
-            >
-              {/* Image */}
-              <div>
-                <img src={item.images[0]} alt={item.name} className="sm:w-[600px] md:w-[100px] m-auto" />
-              </div>
+          <div className="space-y-6">
+            {cart.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col md:flex-row items-center border border-gray-200 p-4 rounded-lg transition-all hover:shadow-md"
+              >
+                {/* Product Image */}
+                <div className="w-full md:w-1/6 mb-4 md:mb-0">
+                  <img
+                    src={item.images[0]}
+                    alt={item.name}
+                    className="w-full h-auto rounded-lg"
+                  />
+                </div>
 
-              {/* Details */}
-              <div className="flex ml-5 mt-10 md:mt-0 md:py-5 md:w-3/4">
-                <div className="flex flex-col md:flex-row md:gap-5 md:justify-center md:w-full">
-                  <h3>{item.name}</h3>
+                {/* Product Details */}
+                <div className="w-full md:w-4/6 md:ml-6">
+                  <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
+                    {/* Quantity */}
+                    <div className="flex items-center gap-2">
+                      <p className="text-[#ff6c00]">Quantity:</p>
+                      <input
+                        type="number"
+                        min="1"
+                        defaultValue={item.quantity}
+                        onChange={(e) => handleQuantity(e, index)}
+                        className="w-16 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-[#ff6c00] focus:border-[#ff6c00] transition-all"
+                      />
+                    </div>
 
-                  <div className="flex gap-10">
-                    <p className="text-orange-500">
-                      {`Quantity: ${quantities[index] ?? item.quantity}`}
-                    </p>
-                    {/* Readjust Quantity */}
-                    <input
-                      type="number"
-                      min="1"
-                      defaultValue={item.quantity}
-                      onChange={(e) => handleQuantity(e, index)}
-                      className="w-20 outline-none border border-gray-300 rounded"
-                    />
+                    {/* Size */}
+                    <p className="text-[#ff6c00]">Size: {item.size}</p>
+
+                    {/* Price */}
+                    <p className="text-green-500">Price: {item.price}</p>
+
+                    {/* Remove Button */}
+                    <button
+                      onClick={() => removeProduct(index)}
+                      className="text-red-600 hover:text-red-800 transition-all flex items-center justify-center"
+                    >
+                      <FaTrash size={20} />
+                    </button>
                   </div>
-
-                  <p className="text-orange-500">{`Size: ${item.size}`}</p>
-                  <p className="text-green-500">{`Price: ${item.price}`}</p>
                 </div>
               </div>
+            ))}
 
-              {/* Remove Item */}
-              <div className="m-auto md:m-0">
-                <button
-                  className="px-5 md:px-1 md:text-lg py-1 rounded-lg border
-              hover:bg-gradient-to-b from-[#ff0000] via-[#c41010] to-[#d92929]
-              transition-all duration-100 hover:scale-110 hover:text-white text-red-600 border-red-600"
-                  onClick={() => removeProduct(index)}
-                >
-                  Remove item
-                </button>
-              </div>
+            <div className="flex flex-col md:flex-row items-center justify-between mt-10">
+              <h1 className="text-xl text-green-500">
+                {cart.length === 0 || totalPrice <= 0
+                  ? ""
+                  : `Total: ${totalPrice} DZD`}
+              </h1>
+              <Button className="bg-[#ff6c00] text-white hover:bg-[#e65a00] transition-all">
+                <Link to={"/Checkout"}>Go to Checkout</Link>
+              </Button>
             </div>
-          ))
+          </div>
         )}
-      </div>
-
-      <div className="flex items-center justify-center gap-5">
-        <h1 className="text-xl text-green-500">{cart.length === 0 || totalPrice <= 0 ? "" : `Total: ${totalPrice} DZD`}</h1>
-        <Button className="text-green-500 border-green-500 hover:!bg-none hover:bg-green-500 hover:text-white">
-          <Link to={"/Checkout"}>Go to Checkout</Link>
-          </Button>
       </div>
     </div>
   );
