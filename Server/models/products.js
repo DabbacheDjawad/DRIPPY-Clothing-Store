@@ -34,10 +34,10 @@ const productSchema = new mongoose.Schema({
         required : true
     },
 
-    image : [{
-        type : String,
-        required : true
-    }]
+    image: [{
+        url: String,
+        publicId: String
+    }],
 })
 
-module.exports = mongoose.model("Procduct" , productSchema);
+module.exports = mongoose.model("Product" , productSchema);

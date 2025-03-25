@@ -7,8 +7,7 @@ const {indexErrors, BadRequest, NotFound} = require("../errors/indexErrors")
 //Get all Orders
 const getAllOrders = async (req , res)=>{
     const orders = await Order.find()
-        .populate("user", "name email").sort("createdAt");
-
+        .populate("user", "name email").populate({path:"products.product" , select : "name"}).sort("createdAt");
     res.status(StatusCodes.OK).json({ orders, count: orders.length });
     
 }
@@ -28,8 +27,10 @@ const createOrder = async (req , res)=>{
 
     if(!products || products.length === 0) throw new BadRequest("Please Provide a user and a product");
 
-    const productsIds = products.map(p=>p.product);
+    const productsIds = products.map(p=>p.product);    
     const foundProducts = await Product.find({_id : {$in : productsIds}});
+    
+    console.log(foundProducts , products);
     
     if(foundProducts.length !== products.length) throw new BadRequest("one or more wrong products (doesnt exist)");
 

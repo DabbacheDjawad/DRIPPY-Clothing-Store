@@ -3,14 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Button from "../Components/Button";
-import { FaPlus } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { GiClothes } from "react-icons/gi";
 import { CiUser } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
 
-//fetch products to find their names and put them in the order section
-//or refactor the getOrders controller in the backend with .populate()
 
 
 const OrdersPage = () => {
@@ -111,7 +108,7 @@ const OrdersPage = () => {
 
         <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-3 mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
-          <Button className="bg-[#ff6c00] text-white hover:bg-[#e65a00] transition-all">
+          <Button>
             <Link to="/">Order Now</Link>
           </Button>
         </div>
@@ -126,7 +123,7 @@ const OrdersPage = () => {
               {/* Order Header */}
               <div className="flex justify-between items-start border-b pb-4 mb-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-[#ff6c00]">Order #{order._id.slice(-6).toUpperCase()}</h2>
+                  <h2 className="text-xl font-semibold">Order #{order._id.slice(-6).toUpperCase()}</h2>
                   <p className="text-sm text-gray-500">
                     {new Date(order.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric',

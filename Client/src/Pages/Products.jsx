@@ -135,7 +135,7 @@ const ProductsPage = () => {
 
           <div className="flex justify-between items-center mb-8 max-sm:flex-col max-sm:gap-3">
             <h1 className="text-3xl font-bold text-gray-800">Products</h1>
-            <Button className="bg-[#ff6c00] text-white hover:bg-[#e65a00] transition-all">
+            <Button>
               <Link to="/admin/products/add"><span className="flex gap-2 items-center">Add New Product<FaPlus /></span></Link>
             </Button>
           </div>
@@ -202,9 +202,9 @@ const ProductsPage = () => {
                 {/* Product Image */}
                 <div className="h-48 bg-gray-100 flex items-center justify-center">
                   <img
-                    src={product.image[0] || "/placeholder-product.jpg"}
+                    src={product.image[0].url}
                     alt={product.name}
-                    className="h-full w-full object-cover"
+                    className="h-full w-2/3 object-center"
                   />
                 </div>
                 

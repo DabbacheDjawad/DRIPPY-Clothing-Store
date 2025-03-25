@@ -5,7 +5,7 @@ const { NotFound } = require("../errors/indexErrors")
 
 //Get all Products
 const getAllProducts = async (req , res)=>{
-    const products = await Product.find().sort("date");
+    const products = await Product.find().sort("-date");
     res.status(StatusCodes.OK).json({products , count : products.length});
 }
 
@@ -22,19 +22,35 @@ const getProduct = async (req , res)=>{
 
 
 //Create Product
-const createProduct = async (req , res)=>{
+const createProduct = async (req, res) => {
+    const { name, price, category, availableSizes, description, available } = req.body;
 
-    const {name , price , category , availableSizes , description , available} = req.body
+    // multiple images
+    if (!req.files || req.files.length === 0) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ error: "Please upload at least one image" });
+    }
 
-    const imageUrl = req.file.path;
+        // Process all uploaded images
+        const imageUrls = await Promise.all(
+            req.files.map(file => {
+                // For Cloudinary via multer-storage-cloudinary, path is already available                
+                return { url: file.path, publicId: file.filename };
+            })
+        );
 
-   // const result = await cloudinary.uploader.upload(image , {folder : "products"})
-   //const product = await Product.create({name , price , category , availableSizes , description , available});  + image
-  
-  
-   const product = await Product.create({name , price , category , availableSizes , description , available , image : imageUrl});
-    res.status(StatusCodes.CREATED).json({product});
-}
+
+        const product = await Product.create({
+            name,
+            price,
+            category,
+            availableSizes,
+            description,
+            available,
+            image: imageUrls // Store array of images
+        });
+
+        res.status(StatusCodes.CREATED).json({ product });
+};
 
 
 //Update Product

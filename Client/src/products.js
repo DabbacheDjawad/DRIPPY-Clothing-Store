@@ -138,13 +138,13 @@ const products = [
         The size of the jacket is large, making it suitable for a wide range of body types and preferences.`,
   },
   {
-    name: "Puffy Jacket",
+    name: "Puffer Jacket",
     price: "6500 DZD",
     category: "jackets",
     availableSizes: ["S", "M", "L", "XL", "XXL", "XXXL"],
     available: true,
     images: [bigJacketBlack, bigJacketGreen, bigJacketPurple],
-    description: `Puffy Jacket,or a winter coat, hanging on a hanger. The jacket is made 
+    description: `Puffer Jacket,or a winter coat, hanging on a hanger. The jacket is made 
      of a synthetic material(polyester), and has a thick
     texture to provide warmth and insulation during cold weather.
     The coat is designed with a hood to protect the wearer from
