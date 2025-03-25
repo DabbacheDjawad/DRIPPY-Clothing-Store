@@ -8,6 +8,10 @@ import ProductDetails from "./Pages/ProductDetails"
 import { CartProvider } from "./Context/CartContext"
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
+import AdminDashboard from "./Pages/AdminDashboard"
+import Products from "./Pages/Products";
+import AddProduct from "./Pages/AddProduct";
+import Orders from "./Pages/Orders";
 function App() {
   return (
     <>
@@ -20,6 +24,10 @@ function App() {
           <Route path="/Cart" element={<ShoppingCart />}/>
           <Route path="/Login" element={<Login />}/>
           <Route path="/Register" element={<Register />} />
+          <Route path="/admin" element={<AdminDashboard />}/>
+          <Route path="/admin/products" element={<Products />}/>
+          <Route path="/admin/products/add" element={<AddProduct />} />
+          <Route path="/admin/orders" element={<Orders/>}/>
         </Routes>
       </CartProvider>
     </>

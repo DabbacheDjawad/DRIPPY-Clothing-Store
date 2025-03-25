@@ -1,11 +1,32 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../Components/Button";
+import axios from "axios";
 
 const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [response , setResponse] = useState("");
+
+    const navigate = useNavigate();
+    function handleNavigation(destination){
+      navigate(`/${destination}`);
+    }
+
+
+    async function handleRegister(e){
+    e.preventDefault()
+        try{
+            const {data} = await axios.post("http://localhost:3000/api/v1/auth/register",{name , email , password});
+            //setting token in localStorage
+            localStorage.setItem("token" , data.token);
+            setResponse("User Registered...")
+        }catch(error){
+            if(error.status == 400) setResponse("Duplicate Email Value")
+            else setResponse("Invalid Credentials")
+        }
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -51,7 +72,8 @@ const Register = () => {
                             required
                         />
                     </div>
-                    <Button type="submit" className="w-full bg-[#ff6c00] text-white hover:bg-[#e65a00] transition-all">
+                    <Button type="submit" className="w-full bg-[#ff6c00] text-white hover:bg-[#e65a00]
+                     transition-all" onClick={handleRegister}>
                         Register
                     </Button>
                 </form>
@@ -61,7 +83,12 @@ const Register = () => {
                         Login here
                     </Link>
                 </p>
+                <p className={`text-center font-bold ${response === "User Registered..."?"text-green-600" :"text-red-600" }`}
+            >{`${response}`}</p>
             </div>
+
+            {/* redirector */}
+            {response ==="User Registered..." ? setTimeout(()=>handleNavigation("") , 2000):""}
         </div>
     );
 };
