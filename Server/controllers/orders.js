@@ -7,7 +7,7 @@ const {indexErrors, BadRequest, NotFound} = require("../errors/indexErrors")
 //Get all Orders
 const getAllOrders = async (req , res)=>{
     const orders = await Order.find()
-        .populate("user", "name email").populate({path:"products.product" , select : "name"}).sort("createdAt");
+        .populate("user", "name email").populate({path:"products.product" , select : "name , price"}).sort("createdAt");
     res.status(StatusCodes.OK).json({ orders, count: orders.length });
     
 }

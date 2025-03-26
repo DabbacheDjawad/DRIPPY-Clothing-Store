@@ -8,24 +8,25 @@ import { GiClothes } from "react-icons/gi";
 import { CiUser } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
 
-
-
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  let [total , setTotal] = useState([]);
   const token = localStorage.getItem("token");
 
   // Fetch orders from backend
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/orders`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/orders`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setOrders(response.data.orders);
       } catch (err) {
         console.log(err);
-        
       }
     };
 
@@ -33,16 +34,31 @@ const OrdersPage = () => {
   }, []);
 
 
-    //delete Order
-    async function deleteOrder(id){
-        try{
-            const response = await axios.delete(`http://localhost:3000/api/v1/orders/:${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-        }catch(error){  
-            console.log(error);
+  //calculating total
+  useEffect(() => {
+    const calculatedTotal = orders.reduce((sum, order) => {
+      return sum + order.products.reduce((orderSum, product) => {
+        return orderSum + (product.product?.price || 0) * product.quantity;
+      }, 0);
+    }, 0);
+  
+    setTotal(calculatedTotal);
+  }, [orders]);
+
+  //delete Order
+  async function deleteOrder(id) {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/v1/orders/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
+      );
+      setOrders((prevOrders) => prevOrders.filter((order) => order._id !== id));
+    } catch (error) {
+      console.log(error);
     }
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100 mt-40 w-[95%] ml-[2.5%]">
@@ -61,7 +77,9 @@ const OrdersPage = () => {
                   to="/admin/products"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                  <span className="flex gap-5 items-center">Products <GiClothes size={20}/></span>
+                  <span className="flex gap-5 items-center">
+                    Products <GiClothes size={20} />
+                  </span>
                 </Link>
               </li>
               <li>
@@ -69,7 +87,9 @@ const OrdersPage = () => {
                   to="/admin/orders"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                 <span className="flex gap-5 items-center">orders <FaShoppingCart size={20}/></span>
+                  <span className="flex gap-5 items-center">
+                    orders <FaShoppingCart size={20} />
+                  </span>
                 </Link>
               </li>
               <li>
@@ -77,7 +97,9 @@ const OrdersPage = () => {
                   to="/admin/users"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                  <span className="flex gap-5 items-center">Users <CiUser size={20}/></span>
+                  <span className="flex gap-5 items-center">
+                    Users <CiUser size={20} />
+                  </span>
                 </Link>
               </li>
               <li>
@@ -85,7 +107,9 @@ const OrdersPage = () => {
                   to="/admin/profile"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                  <span className="flex gap-5 items-center">Profile <ImProfile size={20}/></span>
+                  <span className="flex gap-5 items-center">
+                    Profile <ImProfile size={20} />
+                  </span>
                 </Link>
               </li>
             </ul>
@@ -93,10 +117,9 @@ const OrdersPage = () => {
         </div>
       </div>
 
-      
       <div className="flex-1 p-8">
         {/* SlideBar Button */}
-      <button
+        <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className={`fixed top-7 text-orange-400 left-10 p-2 z-50 bg-white rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] ${
             isSidebarOpen ? "translate-x-[250px]" : ""
@@ -104,7 +127,6 @@ const OrdersPage = () => {
         >
           <RxHamburgerMenu size={24} />
         </button>
-
 
         <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-3 mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
@@ -115,56 +137,83 @@ const OrdersPage = () => {
 
         {/* Orders Grid */}
         <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-6">
-          {orders.map((order) => (
-            <div 
+          {orders && orders.map((order) => (
+            <div
               key={order._id}
               className="bg-white p-6 rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.1)] hover:shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] transition-all"
             >
               {/* Order Header */}
               <div className="flex justify-between items-start border-b pb-4 mb-4">
                 <div>
-                  <h2 className="text-xl font-semibold">Order #{order._id.slice(-6).toUpperCase()}</h2>
+                  <h2 className="text-xl font-semibold">
+                    Order #{order._id.slice(-6).toUpperCase()}
+                  </h2>
                   <p className="text-sm text-gray-500">
-                    {new Date(order.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
+                    {new Date(order.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
                     })}
                   </p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                  order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    order.status === "pending"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : order.status === "shipped"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
               </div>
 
               {/* Customer Section */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-1">CUSTOMER</h3>
-                <p className="text-gray-800 font-medium">{order.user?.name || 'Guest User'}</p>
+                <h3 className="text-sm font-medium text-gray-500 mb-1">
+                  CUSTOMER
+                </h3>
+                <p className="text-gray-800 font-medium">
+                  {order.user?.name || "Guest User"}
+                </p>
               </div>
 
               {/* Products Section */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">PRODUCTS</h3>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">
+                  PRODUCTS
+                </h3>
                 <div className="space-y-3">
                   {order.products.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center">
+                    <div
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
                       <span className="text-gray-800">
-                        {item.product || 'Deleted Product'}
+                        {item.product?.name || "Deleted Product"}
                       </span>
-                      <span className="text-gray-500 text-sm">x{item.quantity}</span>
+                      <span className="text-gray-500 text-sm">
+                        x{item.quantity} - $
+                        {(item.product?.price || 0) * item.quantity}
+                      </span>
+                      
                     </div>
                   ))}
                 </div>
               </div>
 
+              {/* TOTAL */}
+              <div className="flex justify-between">
+                <p className="mb-2">Total : </p>
+                <p className="font-semibold text-orange-500">{`${total}`}</p>
+              </div>
               {/* Actions */}
               <div className="flex justify-end space-x-4 pt-4 border-t">
-                <button onClick={()=>deleteOrder(order.id)} className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors">
+                <button
+                  onClick={() => deleteOrder(order._id)}
+                  className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors"
+                >
                   Cancel Order
                 </button>
               </div>

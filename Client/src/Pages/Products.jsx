@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import Button from "../Components/Button";
 import { FiSearch } from "react-icons/fi";
 import axios from "axios";
@@ -48,7 +48,6 @@ const ProductsPage = () => {
 
     fetchProducts();
   }, []);
-
 
   //filter function
   const filteredProducts = products.filter((product)=>{
@@ -195,6 +194,7 @@ const ProductsPage = () => {
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
+              <Link to={`/admin/products/${product._id}`}>
               <div
                 key={product._id}
                 className="bg-white rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.1)] overflow-hidden hover:shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] transition-all duration-300 hover:-translate-y-1"
@@ -222,6 +222,7 @@ const ProductsPage = () => {
                   </div>
                 </div>
               </div>
+              </Link>
             ))}
 
             <p className="text-red-600 text-xl text-center font-bold w-full">{error?`${error}`:""}</p>

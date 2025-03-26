@@ -34,6 +34,8 @@ const Login = () => {
             );
     
             setResponse("User Logged In...");
+            localStorage.setItem("token" , data.token)
+             
           }catch(error){
             if(error.status === 401) setResponse("UNAUTHORIZED , Wrong Email or Password")
             else if(error.status === 400) setResponse("UNAUTHORIZED , Be Sure To Provide The Full Credentials")
