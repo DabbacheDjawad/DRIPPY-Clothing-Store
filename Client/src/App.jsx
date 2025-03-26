@@ -9,7 +9,7 @@ import { CartProvider } from "./Context/CartContext"
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import AdminDashboard from "./Pages/AdminDashboard"
-import Products from "./Pages/products";
+import Products from "./Pages/Products";
 import AddProduct from "./Pages/AddProduct";
 import Orders from "./Pages/Orders";
 import AdminProductDetails from "./Pages/AdminProductDetails";
