@@ -2,71 +2,72 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../Components/Button";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { FaPlus } from "react-icons/fa";
-import axios from "axios"
+import axios from "axios";
 import { FaShoppingCart } from "react-icons/fa";
 import { GiClothes } from "react-icons/gi";
 import { CiUser } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
+
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [products , setProducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [total, setTotal] = useState(0);
 
+  const [productsShowMore, setProductsShowMore] = useState(false);
+  const [productsCount, setproductsCount] = useState(4);
+  const [productsShowValue, setProductsShowValue] = useState("Show More");
 
-  useEffect(()=>{ 
-      async function fetchProducts(){
-        const res = await axios.get("http://localhost:3000/api/v1/products");        
-        setProducts(res.data.products);        
+  function handleProductsCount() {
+    if (productsShowMore) {
+      setproductsCount(4);
+      setProductsShowValue("Show More");
+    } else {
+      setproductsCount(products.length);
+      setProductsShowValue("Show Less");
+    }
+    setProductsShowMore(!productsShowMore);
+  }
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const productRes = await axios.get("http://localhost:3000/api/v1/products");
+        const ordersRes = await axios.get("http://localhost:3000/api/v1/orders", 
+          { headers: { Authorization: `Bearer ${token}` } });
+        const usersRes = await axios.get("http://localhost:3000/api/v1/users",
+          { headers: { Authorization: `Bearer ${token}` } });
+
+        setOrders(ordersRes.data.orders);
+        setUsers(usersRes.data.users);
+        setProducts(productRes.data.products);
+      } catch (err) {
+        console.log(err);
       }
-      fetchProducts();
-  } , [])
+    }
+    fetchProducts();
+  }, [token]);
 
+  useEffect(() => {
+    const calculatedTotal = orders.reduce((sum, order) => {
+      return sum + order.products.reduce((orderSum, product) => {
+        return orderSum + (product.product?.price || 0) * product.quantity;
+      }, 0);
+    }, 0);
+    setTotal(calculatedTotal);
+  }, [orders]);
 
-
-
-
-
-  // Mock data (replace with real data from your backend)
-  const totalProducts = 120;
-  const totalOrders = 45;
-  const totalUsers = 85;
-  const totalRevenue = 12000;
-
-  const latestProducts = [
-    { id: 1, name: "Product A", dateAdded: "2023-10-01" },
-    { id: 2, name: "Product B", dateAdded: "2023-10-02" },
-    { id: 3, name: "Product C", dateAdded: "2023-10-03" },
-  ];
-
-  const latestOrders = [
-    { id: 1, customer: "John Doe", total: 1500, date: "2023-10-01" ,status : "pending"},
-    { id: 2, customer: "Jane Smith", total: 2500, date: "2023-10-02" ,status : "shipped"},
-    { id: 3, customer: "Alice Johnson", total: 3000, date: "2023-10-03",status : "pending" },
-  ];
-
-  const latestUsers = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      dateJoined: "2023-10-01",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      dateJoined: "2023-10-02",
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      dateJoined: "2023-10-03",
-    },
-  ];
+  // Mock data
+  const totalProducts = products.length;
+  const totalOrders = orders.length;
+  const totalUsers = users.length;
+  const totalRevenue = total;
 
   return (
-    <div className="flex min-h-screen bg-gray-100 mt-40">
+    <div className="flex min-h-screen bg-gray-100 mt-40 max-sm:mt-20 max-sm:overflow-x-hidden">
       {/* Sidebar */}
       <div
         className={`fixed inset-y-0 z-50 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
@@ -82,7 +83,7 @@ const AdminDashboard = () => {
                   to="/admin/products"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                  <span className="flex gap-5 items-center">Products <GiClothes size={20}/></span>
+                  <span className="flex gap-5 items-center"><p className="w-[30%]">Products</p> <GiClothes size={20}/></span>
                 </Link>
               </li>
               <li>
@@ -90,7 +91,7 @@ const AdminDashboard = () => {
                   to="/admin/orders"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                 <span className="flex gap-5 items-center">orders <FaShoppingCart size={20}/></span>
+                  <span className="flex gap-5 items-center"><p className="w-[30%]">orders</p> <FaShoppingCart size={20}/></span>
                 </Link>
               </li>
               <li>
@@ -98,7 +99,7 @@ const AdminDashboard = () => {
                   to="/admin/users"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                  <span className="flex gap-5 items-center">Users <CiUser size={20}/></span>
+                  <span className="flex gap-5 items-center"><p className="w-[30%]">Users</p> <CiUser size={20}/></span>
                 </Link>
               </li>
               <li>
@@ -106,7 +107,7 @@ const AdminDashboard = () => {
                   to="/admin/profile"
                   className="block text-gray-700 hover:text-[#ff6c00] transition-all"
                 >
-                  <span className="flex gap-5 items-center">Profile <ImProfile size={20}/></span>
+                  <span className="flex gap-5 items-center"><p className="w-[30%]">Profile</p><ImProfile size={20}/></span>
                 </Link>
               </li>
             </ul>
@@ -119,134 +120,176 @@ const AdminDashboard = () => {
         {/* Sidebar Toggle Button */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="fixed top-4 left-4 p-2 bg-white rounded-lg shadow-lg lg:hidden"
+          className={`fixed top-4 left-4 p-2 z-50 hover:text-orange-500 transition-all duration-200 bg-white rounded-lg shadow-lg ${
+            isSidebarOpen ? "translate-x-[250px]" : ""
+          }`}
         >
           <RxHamburgerMenu size={24} />
         </button>
 
         {/* Dashboard Content */}
-        <div className="p-8 lg:ml-[5%] w-[90%]">
-          {/* Header */}
-          <h1 className="text-2xl font-bold text-center mb-8">
+        <div className="p-8 lg:ml-[5%] w-[90%] max-sm:w-full max-sm:p-3">
+          <h1 className="text-2xl font-bold text-center mb-8 max-sm:text-xl max-sm:mb-4">
             Admin Dashboard
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm hover:scale-105 transition-all duration-300">
-              <h2 className="text-lg font-semibold text-gray-700">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 max-sm:w-3/4 max-sm:ml-[7.5%] sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-700 max-sm:text-xs">
                 Total Products
               </h2>
-              <p className="text-2xl font-bold text-[#ff6c00]">
+              <p className="text-2xl font-bold text-[#ff6c00] max-sm:text-lg">
                 {totalProducts}
               </p>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm hover:scale-105 transition-all duration-300">
-              <h2 className="text-lg font-semibold text-gray-700">
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-700 max-sm:text-xs">
                 Total Orders
               </h2>
-              <p className="text-2xl font-bold text-[#ff6c00]">{totalOrders}</p>
+              <p className="text-xl font-bold text-[#ff6c00] max-sm:text-lg">
+                {totalOrders}
+              </p>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm hover:scale-105 transition-all duration-300">
-              <h2 className="text-lg font-semibold text-gray-700">
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-700 max-sm:text-xs">
                 Total Users
               </h2>
-              <p className="text-2xl font-bold text-[#ff6c00]">{totalUsers}</p>
+              <p className="text-xl font-bold text-[#ff6c00] max-sm:text-lg">
+                {totalUsers}
+              </p>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm hover:scale-105 transition-all duration-300">
-              <h2 className="text-lg font-semibold text-gray-700">
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-700 max-sm:text-xs">
                 Total Revenue
               </h2>
-              <p className="text-2xl font-bold text-[#ff6c00]">
-                ${totalRevenue}
+              <p className="text-xl font-bold text-[#ff6c00] max-sm:text-lg">
+                ${totalRevenue.toFixed(2)}
               </p>
             </div>
           </div>
 
           {/* Latest Products */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-5 max-sm:flex-col">
-              <h2 className="text-xl font-bold mt-2">Latest Products</h2>
-              <Button className={"max-sm:w-[80%] max-sm:mt-3"}>
-                <Link to={"/products/add"}>
-                  <span className="flex items-center justify-center gap-3">
-                    Add Product
-                    <FaPlus />
-                  </span>
-                </Link>
-              </Button>
+          <div className="mb-8 w-[95%]">
+            <div className=" w-full flex items-center justify-between mb-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+              <h2 className="text-xl font-bold max-sm:text-lg">Latest Products</h2>
+              <Link to={"/admin/products"}>
+                <Button>
+                  Manage Products
+                </Button>
+              </Link>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-              {latestProducts.map((product) => (
-                <div key={product.id} className="border-b border-gray-200 py-3">
-                  <p className="font-semibold">{product.name}</p>
-                  <p className="text-sm text-gray-600">
-                    Added on: {product.dateAdded}
-                  </p>
+
+            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-auto">
+              <div className="min-w-[300px]">
+                <div className="grid grid-cols-4 gap-2 max-sm:text-xs font-bold border-b pb-2">
+                  <div>ID</div>
+                  <div>Name</div>
+                  <div>Price</div>
+                  <div>Stock</div>
                 </div>
-              ))}
+
+                {products.slice(0, productsCount).map((product) => (
+                  <div key={product._id} className="grid grid-cols-4 gap-2 py-2 border-b border-gray-200 text-xl max-sm:text-xs items-center">
+                    <div className="truncate">#{product._id.slice(-6)}</div>
+                    <div className="flex items-center gap-1">
+                      <img 
+                        src={product.image[0]?.url} 
+                        alt={product.name} 
+                        className="h-12 max-sm:h-6 max-sm:w-6" 
+                      />
+                      <span className="truncate">{product.name}</span>
+                    </div>
+                    <div className="text-[#ff6c00] font-semibold">${product.price}</div>
+                    <div className={`font-semibold ${
+                      product.available ? "text-green-500" : "text-red-600"
+                    }`}>
+                      {product.available ? "In Stock" : "Out"}
+                    </div>
+                  </div>
+                ))}
+
+                <Button 
+                  onClick={handleProductsCount}
+                  className="mt-3 w-fit max-sm:mt-5 max-sm:w-fit max-sm:text-sm"
+                >
+                  {productsShowValue}
+                </Button>
+              </div>
             </div>
           </div>
 
           {/* Latest Orders */}
-
-
-              <div className="mb-8">
-                <h2 className="text-xl font-bold mb-4">Latest Orders</h2>
-                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-
-
-                  <div className="grid grid-cols-5 gap-4 font-semibold border-b pb-2 mb-2">
-                    <div>Order ID</div>
-                    <div>Customer</div>
-                    <div>Products</div>
-                    <div>Status</div>
-                    <div>Total</div>
-                  </div>
-
-                  {/* Rows */}
-                  {latestOrders.map((order) => (
-                    <div
-                      key={order.id}
-                      className="grid grid-cols-5 gap-4 py-3 border-b border-gray-300"
-                    >
-                      <div className="font-medium">#{order.id}</div>
-                      <div>{order.customer}</div>
-                      <div>
-                        {order.product}
-                      </div>
-                      <div>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            order.status === "shipped"? "bg-blue-100 text-blue-800":""}
-                              ${order.status === "delivered"? "bg-green-100 text-green-800":""}
-                              ${order.status === "pending"?"bg-yellow-100 text-yellow-800":""}
-                          `}
-                        >
-                          {order.status}
-                        </span>
-                      </div>
-                      <div className="text-green-500 font-semibold">
-                        ${order.total}
-                      </div>
-                    </div>
-                  ))}
+          <div className="mb-8 w-[95%]">
+            <div className="flex justify-between mb-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+              <h2 className="text-2xl font-bold max-sm:text-lg">Latest Orders</h2>
+              <Link to={"/admin/orders"}>
+                <Button className="w-fit max-sm:text-sm">Manage Orders</Button>
+              </Link>
+            </div>
+            
+            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-auto">
+              <div className="min-w-[320px]">
+                <div className="grid grid-cols-5 gap-2 text-xl max-sm:text-xs font-bold border-b pb-2">
+                  <div>Order</div>
+                  <div>Customer</div>
+                  <div>Items</div>
+                  <div>Status</div>
+                  <div>Total</div>
                 </div>
-              </div>
 
+                {orders.slice(0, 5).map((order) => (
+                  <div key={order._id} className="grid grid-cols-5 gap-2 py-2 border-b border-gray-200 max text-xl-sm:text-xs items-center">
+                    <div className="truncate text-xl">#{order._id.slice(-6)}</div>
+                    <div className="truncate">{order.user?.name?.split(' ')[0] || 'N/A'}</div>
+                    <div className="ml-[10%]">{order.products.length}</div>
+                    <div>
+                      <span className={`px-1 py-0.5 rounded-full max-sm:text-[10px] ${
+                        order.status === "shipped" ? "bg-blue-100 text-blue-800" :
+                        order.status === "delivered" ? "bg-green-100 text-green-800" :
+                        "bg-yellow-100 text-yellow-800"
+                      }`}>
+                        {order.status}
+                      </span>
+                    </div>
+                    <div className="text-green-500 font-semibold">${(
+                      order.products.reduce((sum, product) => {
+                        return sum + (product.product?.price || 0) * product.quantity;
+                      }, 0)
+                    ).toFixed(2)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
           {/* Latest Users */}
-          <div>
-            <h2 className="text-xl font-bold mb-4">Latest Users</h2>
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-              {latestUsers.map((user) => (
-                <div key={user.id} className="border-b border-gray-200 py-3">
-                  <p className="font-semibold">{user.name}</p>
-                  <p className="text-sm text-gray-600">Email: {user.email}</p>
-                  <p className="text-sm text-gray-600">
-                    Joined on: {user.dateJoined}
-                  </p>
+          <div className="w-[95%]">
+            <div className="flex justify-between mb-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+              <h2 className="text-2xl font-bold max-sm:text-lg">Latest Users</h2>
+              <Link to={"/admin/users"}>
+                <Button className="w-fit max-sm:text-sm">Manage Users</Button>
+              </Link>
+            </div>
+            
+            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-auto">
+              <div className="min-w-[280px]">
+                <div className="grid grid-cols-4 gap-2 text-xs font-bold border-b pb-2">
+                  <div>User ID</div>
+                  <div>Name</div>
+                  <div>Email</div>
+                  <div>Role</div>
                 </div>
-              ))}
+
+                {users.slice(0, 5).map((user) => (
+                  <div key={user._id} className="grid grid-cols-4 gap-2 py-2 border-b border-gray-200 text-lg max-sm:text-xs items-center">
+                    <div className="truncate">#{user._id.slice(-6)}</div>
+                    <div className="truncate">{user.name}</div>
+                    <div className="truncate">{user.email.split('@')[0]}...</div>
+                    <div className="capitalize">{user.role}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

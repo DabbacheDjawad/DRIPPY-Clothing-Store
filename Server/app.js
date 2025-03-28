@@ -47,7 +47,7 @@ app.use(rateLimit({
   app.use(xss());
 
 //routes
-app.use("/api/v1/users" , authMiddleware, adminAuth , usersRouter);
+app.use("/api/v1/users" , authMiddleware , usersRouter);
 app.use("/api/v1/products" , productsRouter);
 app.use("/api/v1/orders", authMiddleware , ordersRouter);
 app.use("/api/v1/auth" , authRouter);
