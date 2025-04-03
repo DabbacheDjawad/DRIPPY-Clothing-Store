@@ -13,7 +13,7 @@ const authMiddleware = async (req , res , next)=>{
 
     try{
         const payload = jwt.verify(token , process.env.JWT_SECRET);
-        req.user = {userID : payload.userID , name : payload.name , role : payload.role}
+        req.user = {userID : payload.userID , name : payload.name , role : payload.role , isBlocked : payload.isBlocked}
         next();
     }catch(error){
         throw new Unauthenticated(error);
@@ -28,4 +28,11 @@ const adminAuth = async (req , res , next)=>{
     next();
 }
 
-module.exports = {authMiddleware , adminAuth};
+//for blocking users
+const userBlock =(req , res ,next)=>{
+    if(req.user.isBlocked === true) return res.status(StatusCodes.UNAUTHORIZED)
+        .json({message : "Account Blocked , Can not Enter"})
+        next();
+}
+
+module.exports = {authMiddleware , adminAuth , userBlock};

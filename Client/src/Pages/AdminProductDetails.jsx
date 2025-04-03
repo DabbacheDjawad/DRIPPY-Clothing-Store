@@ -8,6 +8,7 @@ import { CiUser } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Button from "../Components/Button";
+import { MdDashboard } from "react-icons/md";
 
 const AdminProductDetails = () => {
   const { id } = useParams();
@@ -116,6 +117,16 @@ const AdminProductDetails = () => {
           <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
           <nav>
             <ul className="space-y-10 font-semibold">
+
+            <li>
+                <Link
+                  to="/admin"
+                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
+                >
+                 <span className="flex gap-5 items-center">Dashboard <MdDashboard size={20}/></span>
+                </Link>
+              </li>
+
               <li>
                 <Link
                   to="/admin/products"
@@ -166,9 +177,7 @@ const AdminProductDetails = () => {
         {/* Sidebar Toggle Button */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className={`fixed top-7 text-orange-400 left-10 p-2 z-50 bg-white rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] ${
-            isSidebarOpen ? "translate-x-[250px]" : ""
-          } transition-all duration-300 hover:scale-105`}
+          className={`fixed top-7 text-orange-400 left-10 p-2 z-50 bg-white rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)]  transition-all duration-300 hover:scale-105`}
         >
           <RxHamburgerMenu size={24} />
         </button>

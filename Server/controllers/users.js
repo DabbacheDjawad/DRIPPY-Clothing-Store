@@ -33,9 +33,23 @@ const deleteUser = async (req , res)=>{
     res.status(StatusCodes.OK).send();
 }
 
+
+//block User
+const BlockUser = async(req , res)=>{
+    const {id : userID} = req.params;
+    const user = await User.findById({_id:userID})
+    
+    
+    if(!user) throw new NotFound(`No user with the id : ${userID}`)
+    
+    user.isBlocked = !user.isBlocked;
+    await user.save();    
+    res.status(StatusCodes.OK).json({user});
+}
 module.exports = {
     getAllUsers,
     getUser,
     createAdmin,
-    deleteUser
+    deleteUser,
+    BlockUser
 }

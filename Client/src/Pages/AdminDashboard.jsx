@@ -7,6 +7,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { GiClothes } from "react-icons/gi";
 import { CiUser } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
+import { MdDashboard } from "react-icons/md";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -78,6 +79,16 @@ const AdminDashboard = () => {
           <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
           <nav>
             <ul className="space-y-10 font-semibold">
+
+            <li>
+                <Link
+                  to="/admin"
+                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
+                >
+                 <span className="flex gap-5 items-center">Dashboard <MdDashboard size={20}/></span>
+                </Link>
+              </li>
+
               <li>
                 <Link
                   to="/admin/products"
@@ -286,7 +297,7 @@ const AdminDashboard = () => {
                     <div className="truncate">#{user._id.slice(-6)}</div>
                     <div className="truncate">{user.name}</div>
                     <div className="truncate">{user.email.split('@')[0]}...</div>
-                    <div className="capitalize">{user.role}</div>
+                    <div className="capitalize text-[#ff6c00] font-semibold">{user.role}</div>
                   </div>
                 ))}
               </div>

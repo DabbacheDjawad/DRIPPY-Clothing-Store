@@ -13,6 +13,7 @@ import Products from "./Pages/Products";
 import AddProduct from "./Pages/AddProduct";
 import Orders from "./Pages/Orders";
 import AdminProductDetails from "./Pages/AdminProductDetails";
+import Users from "./Pages/Users";
 function App() {
   return (
     <>
@@ -30,6 +31,7 @@ function App() {
           <Route path="/admin/products/add" element={<AddProduct />} />
           <Route path="/admin/products/:id" element={<AdminProductDetails/>}/> 
           <Route path="/admin/orders" element={<Orders/>}/>
+          <Route path="/admin/users" element={<Users />}/>
         </Routes>
       </CartProvider>
     </>

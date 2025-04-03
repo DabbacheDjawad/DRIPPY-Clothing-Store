@@ -4,7 +4,7 @@ const cloudinary = require("../utils/cloudinary");
 const { NotFound } = require("../errors/indexErrors")
 
 //Get all Products
-const getAllProducts = async (req , res)=>{
+const getAllProducts = async (req , res)=>{    
     const products = await Product.find().sort("-date");
     res.status(StatusCodes.OK).json({products , count : products.length});
 }

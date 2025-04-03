@@ -5,10 +5,12 @@ const {
     getAllUsers,
     getUser,
     createAdmin,
-    deleteUser
+    deleteUser,
+    BlockUser
 } = require("../controllers/users");
 
 router.route("/").get(getAllUsers).post(createAdmin);
-router.route("/:id").get(getUser).delete(deleteUser);
+router.route("/:id").get(getUser).delete(deleteUser)
+router.route("/block/:id").patch(BlockUser);
 
 module.exports = router;

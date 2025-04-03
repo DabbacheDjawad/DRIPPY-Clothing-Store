@@ -32,9 +32,13 @@ const Login = () => {
                 Authorization : `Bearer ${token}`
               }}
             );
-    
-            setResponse("User Logged In...");
-            localStorage.setItem("token" , data.token)
+            
+            if(data.user.isBlocked === true){
+                setResponse("You Can't Login , your account is blocked");
+            }else{
+                setResponse("User Logged In...");
+                localStorage.setItem("token" , data.token)
+            }
              
           }catch(error){
             if(error.status === 401) setResponse("UNAUTHORIZED , Wrong Email or Password")

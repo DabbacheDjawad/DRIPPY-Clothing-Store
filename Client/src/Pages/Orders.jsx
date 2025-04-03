@@ -7,11 +7,14 @@ import { FaShoppingCart } from "react-icons/fa";
 import { GiClothes } from "react-icons/gi";
 import { CiUser } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
+import { MdDashboard } from "react-icons/md";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   let [total , setTotal] = useState([]);
+  const [response , setResponse] = useState("");
+
   const token = localStorage.getItem("token");
 
   // Fetch orders from backend
@@ -25,8 +28,9 @@ const OrdersPage = () => {
           }
         );
         setOrders(response.data.orders);
+        setResponse("");
       } catch (err) {
-        console.log(err);
+        setResponse(err.response.data.message);
       }
     };
 
@@ -72,6 +76,16 @@ const OrdersPage = () => {
           <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
           <nav>
             <ul className="space-y-10 font-semibold">
+
+            <li>
+                <Link
+                  to="/admin"
+                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
+                >
+                 <span className="flex gap-5 items-center">Dashboard <MdDashboard size={20}/></span>
+                </Link>
+              </li>
+
               <li>
                 <Link
                   to="/admin/products"
@@ -224,7 +238,7 @@ const OrdersPage = () => {
         {/* Empty State */}
         {orders.length === 0 && (
           <div className="bg-white p-8 rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.1)] text-center">
-            <p className="text-gray-500">No orders found</p>
+            <p className="text-gray-500">{response}</p>
           </div>
         )}
       </div>

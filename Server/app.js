@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 const connectDB = require("./db/connectDB");
 
 //auth middleware
-const {authMiddleware , adminAuth} = require("./middleware/authentication")
+const {authMiddleware , adminAuth , userBlock} = require("./middleware/authentication")
 
 
 //routes
@@ -47,10 +47,10 @@ app.use(rateLimit({
   app.use(xss());
 
 //routes
-app.use("/api/v1/users" , authMiddleware , usersRouter);
-app.use("/api/v1/products" , productsRouter);
-app.use("/api/v1/orders", authMiddleware , ordersRouter);
-app.use("/api/v1/auth" , authRouter);
+app.use("/api/v1/users" , authMiddleware, adminAuth , userBlock , usersRouter);
+app.use("/api/v1/products" ,productsRouter);
+app.use("/api/v1/orders", authMiddleware , adminAuth , userBlock , ordersRouter);
+app.use("/api/v1/auth" ,authRouter);
 
 
 //error handler middleware

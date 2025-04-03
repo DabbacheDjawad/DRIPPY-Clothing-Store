@@ -28,11 +28,18 @@ const userSchema = new mongoose.Schema({
         type : String,
         default : "client",
         enum:["client" , "admin" , "superAdmin"]
+    },
+
+    isBlocked : {
+        type : Boolean,
+        required : true,
+        default : false,
     }
 })
 
 //Hashing Password
 userSchema.pre("save" , async function(next){
+    if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password , salt);
     next();
@@ -46,7 +53,7 @@ userSchema.methods.comparePasswords = async function(enteredPassword){
 
 //Signing the JWT
 userSchema.methods.createJWT = async function(){
-    return jwt.sign({name : this.name , role : this.role , userID : this._id}
+    return jwt.sign({name : this.name , role : this.role , userID : this._id , isBlocked : this.isBlocked}
         ,process.env.JWT_SECRET
         ,{expiresIn:process.env.JWT_LIFETIME})
 }
