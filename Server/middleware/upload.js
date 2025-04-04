@@ -18,6 +18,6 @@ const upload = multer({
 
 // Export both single and array upload options
 module.exports = {
-    singleUpload: upload.single('image'),
+    singleUpload: upload.single('avatar'),
     arrayUpload: upload.array('image', 10) // Max 10 images
 };

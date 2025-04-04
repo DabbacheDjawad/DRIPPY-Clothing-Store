@@ -34,6 +34,13 @@ const userSchema = new mongoose.Schema({
         type : Boolean,
         required : true,
         default : false,
+    },
+    phone : {
+        type : Number,
+    },
+    avatar: {
+        url: String,
+        publicId: String
     }
 })
 

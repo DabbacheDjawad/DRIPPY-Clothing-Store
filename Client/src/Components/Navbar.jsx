@@ -33,7 +33,7 @@ const Navbar = ({ className }) => {
         >
             {/* image Div */}
             <div>
-                <img src={logo} alt="logo" width={150} />
+                <Link to={"/"}><img src={logo} alt="logo" width={150} /></Link>
             </div>
 
             {/* DropDown Menu */}
@@ -54,10 +54,10 @@ const Navbar = ({ className }) => {
                 lg:relative lg:bg-white lg:text-black lg:top-auto lg:left-auto lg:max-h-fit lg:w-[50%] lg:opacity-100 lg:translate-y-0 lg:visible lg:shadow-none
                 xl:relative xl:bg-white xl:text-black xl:top-auto xl:left-auto xl:max-h-fit xl:opacity-100 xl:w-[50%] xl:translate-y-0 xl:visible xl:shadow-none`}
             >
-                <ul className="flex flex-col lg:flex-row xl:flex-row lg:gap-10 xl:gap-10 lg:ml-[15%] xl:ml-[15%]">
+                <ul className="flex flex-col lg:flex-row xl:flex-row lg:gap-10 xl:gap-14 lg:ml-[15%] xl:ml-[15%]">
                     <Link
                         to={"/"}
-                        className="py-4 pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                        className="py-4 max-lg:pl-[10%] hover:bg-[#ff6c00] hover:border-1
                     hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
                      lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
                         onClick={handleIsOpen}
@@ -67,7 +67,7 @@ const Navbar = ({ className }) => {
 
                     <Link
                         to={"/Cart"}
-                        className="py-4 pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                        className="py-4 max-lg:pl-[10%] hover:bg-[#ff6c00] hover:border-1
                     hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
                      lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
                         onClick={handleIsOpen}
@@ -77,12 +77,22 @@ const Navbar = ({ className }) => {
 
                     <Link
                         to={"/Checkout"}
-                        className="py-4 pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                        className="py-4 max-lg:pl-[10%] hover:bg-[#ff6c00] hover:border-1
                     hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
                      lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
                         onClick={handleIsOpen}
                     >
                         <li>Checkout</li>
+                    </Link>
+
+                    <Link
+                        to={"/profile"}
+                        className="py-4 max-lg:pl-[10%] hover:bg-[#ff6c00] hover:border-1
+                    hover:border-[#ff6c00] hover:rounded-lg lg:hover:text-[#ff6c00] lg:hover:bg-white
+                     lg:hover:border-none xl:hover:border-none transition-all hover:text-white font-medium"
+                        onClick={handleIsOpen}
+                    >
+                        <li>Profile</li>
                     </Link>
                 </ul>
             </div>

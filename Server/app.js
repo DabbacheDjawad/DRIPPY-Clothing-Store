@@ -31,6 +31,7 @@ const errorHandlerMiddleware = require("./middleware/errorHandler");
 const notFound = require("./middleware/not-found");
 
 
+
 app.get("/" , (req , res)=>{
     res.send("DRIPPY : ONLINE CLOTHING STORE")
 })

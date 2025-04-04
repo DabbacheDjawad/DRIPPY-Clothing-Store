@@ -1,21 +1,23 @@
 const Order = require("../models/orders");
 const Product = require("../models/products")
 const {StatusCodes} = require("http-status-codes");
-const {indexErrors, BadRequest, NotFound} = require("../errors/indexErrors")
+const {indexErrors, BadRequest, NotFound} = require("../errors/indexErrors");
+const products = require("../models/products");
 
 
 //Get all Orders
 const getAllOrders = async (req , res)=>{
     const orders = await Order.find()
-        .populate("user", "name email").populate({path:"products.product" , select : "name , price"}).sort("createdAt");
+        .populate("user", "name email").populate("products.product").sort("createdAt");
     res.status(StatusCodes.OK).json({ orders, count: orders.length });
     
 }
 
 
-//get Single Order
-const getOrder = (req , res)=>{
-    res.send("Get Single Order");
+//get current user orders
+const getCurrentUserOrders = async (req , res)=>{
+    const orders = await Order.find({user : req.user.userID}).populate("products.product");
+    res.status(StatusCodes.OK).json({orders , count:orders.length});
 }
 
 
@@ -29,8 +31,6 @@ const createOrder = async (req , res)=>{
 
     const productsIds = products.map(p=>p.product);    
     const foundProducts = await Product.find({_id : {$in : productsIds}});
-    
-    console.log(foundProducts , products);
     
     if(foundProducts.length !== products.length) throw new BadRequest("one or more wrong products (doesnt exist)");
 
@@ -89,7 +89,7 @@ const deleteOrder = async (req , res)=>{
 
 module.exports = {
     getAllOrders,
-    getOrder,
+    getCurrentUserOrders,
     createOrder,
     updateOrder,
     deleteOrder

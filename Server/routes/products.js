@@ -1,4 +1,4 @@
-const { singleUpload, arrayUpload } = require("../middleware/upload");
+const {arrayUpload } = require("../middleware/upload");
 const express = require("express");
 const router = express.Router();
 const {

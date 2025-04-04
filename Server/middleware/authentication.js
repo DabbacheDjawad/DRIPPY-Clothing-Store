@@ -22,8 +22,8 @@ const authMiddleware = async (req , res , next)=>{
 
 //for admin logins
 const adminAuth = async (req , res , next)=>{
-    if(req.user.role !== "admin"){
-        return res.status(StatusCodes.UNAUTHORIZED).json({message : "only admins are allowed"})
+    if(req.user.role === "client"){
+        return res.status(StatusCodes.UNAUTHORIZED).json({message : "only admins and super Admins are allowed"})
     };
     next();
 }
