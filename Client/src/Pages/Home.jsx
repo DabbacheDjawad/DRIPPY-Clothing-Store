@@ -2,17 +2,19 @@ import backgroundImage from "../assets/images/backgroundShoe1.png"
 import banner from "../assets/images/banner-bg.jpg"
 import Features from "../Components/Features"
 import { CiCirclePlus } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoFilter } from "react-icons/io5";
 import products from "../products";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Button from "../Components/Button";
 import { Link } from "react-router-dom";
+import axios from "axios";
 const Home = () => {
   const mediumScreenShoe = "md:-rotate-90 xl:-rotate-0 lg:-rotate-0 2xl:rotate-0 md:mt-14 lg:mt-auto xl:mt-auto";
 
 
+  const [products , setProducts] = useState([]);
   const [showMore , setShowMore] = useState(false)
   const [count , setCount] = useState(5)
   const [showValue , setShowValue] = useState("Show More");
@@ -29,6 +31,19 @@ const Home = () => {
   //search 
   const [search , setSearch] = useState("")
   
+
+  useEffect(()=>{
+      async function fetchProducts(){
+        try{
+          const response = await axios.get("http://localhost:3000/api/v1/products")
+          setProducts(response.data.products);  
+        }catch(error){
+          console.log(error);
+        }
+      }
+      fetchProducts();
+  }, [])
+
 
   function handleFiltering(){
     setFilters(!filters);
@@ -57,7 +72,7 @@ const Home = () => {
   const filteredProducts = products.filter((product)=>{
     const category = categoryFilter === "all" || product.category ===  categoryFilter;
     
-    const productPrice = Number(product.price.split(" ")[0]);
+    const productPrice = product.price;
     let price = true;
     if (priceFilter === "under-3000") {
       price = productPrice < 3000;
@@ -177,9 +192,9 @@ const Home = () => {
               {products && sortedProducts.slice(0 , count).map((product , index)=>(
                 
                   <li key={index} className="hover:scale-105 transition-all duration-150">
-                <Link to={`/productDetails/${index}`}>
+                <Link to={`/productDetails/${product._id}`}>
                 <LazyLoadImage
-                src={product.images[0]}
+                src={product.image[0].url}
                 alt={product.name}
                 effect="blur"
                 className="h-[300px] w-[250px] border-gray-200 border-1 rounded-lg"

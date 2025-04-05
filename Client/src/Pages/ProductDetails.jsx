@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import products from "../products";
 import { Swiper, SwiperSlide } from "swiper/react";
 import React, { useState } from "react";
 import { Navigation, Pagination } from "swiper/modules";
@@ -9,15 +8,38 @@ import { useRef, useEffect } from "react";
 import Button from "../Components/Button";
 import { Link } from "react-router-dom";
 import { useCart } from "../Context/CartContext";
+import axios from "axios";
 
 const ProductDetails = () => {
-  const productID = useParams();
+  const {id} = useParams();
+  
+  const [product, setProduct] = useState({
+    name: '',
+    description: '',
+    category: '',
+    price: 0,
+    available: false,
+    image: [],
+    availableSizes: []
+  });
   const { addToCart } = useCart(); // add to cart function
   const swiperRef = useRef(null);
   let [quantity, setQuantity] = useState(1);
   let [prSize, setSize] = useState("S");
 
-  const product = products[productID.id];
+  
+  useEffect(()=>{
+    async function fetchProduct(){
+      try{
+        const response = await axios.get(`http://localhost:3000/api/v1/products/${id}`);
+        setProduct(response.data.product);    
+      }catch(error){
+        console.log(error);
+      }
+    }
+    console.log(product);
+    fetchProduct()
+  } , [])
 
   function handleQuantity(e) {
     setQuantity(Number(e.target.value));
@@ -31,7 +53,7 @@ const ProductDetails = () => {
     if (swiperRef.current) {
       swiperRef.current?.navigation?.update();
     }
-  }, []);
+  }, [id]);
 
   function handleAddToCart() {
     addToCart(product, quantity, prSize);
@@ -71,10 +93,10 @@ const ProductDetails = () => {
               navigation
               className="w-full"
             >
-              {product.images.map((image, index) => (
+              {product.image.map((img, index) => (
                 <SwiperSlide key={index}>
                   <img
-                    src={image}
+                    src={img.url}
                     alt={product.name}
                     className="w-full h-auto rounded-lg border border-gray-200"
                   />
