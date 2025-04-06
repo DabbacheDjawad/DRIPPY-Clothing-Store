@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { RxHamburgerMenu } from "react-icons/rx";
 import Button from "../Components/Button";
-import { FaShoppingCart } from "react-icons/fa";
-import { GiClothes } from "react-icons/gi";
-import { CiUser } from "react-icons/ci";
-import { ImProfile } from "react-icons/im";
-import { MdDashboard } from "react-icons/md";
-
+import SideBar from "../Components/SideBar";
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   let [total , setTotal] = useState([]);
   const [response , setResponse] = useState("");
 
@@ -65,84 +58,13 @@ const OrdersPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-100 mt-40 w-[95%] ml-[2.5%]">
+    <div className="flex min-h-screen bg-gray-100 mt-40 w-[95%] md:ml-10">
+      
       {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 z-50 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
-          <nav>
-            <ul className="space-y-10 font-semibold">
-
-            <li>
-                <Link
-                  to="/admin"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                 <span className="flex gap-5 items-center">Dashboard <MdDashboard size={20}/></span>
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  to="/admin/products"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    Products <GiClothes size={20} />
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/orders"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    orders <FaShoppingCart size={20} />
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/users"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    Users <CiUser size={20} />
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/profile"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    Profile <ImProfile size={20} />
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-      <div className="flex-1 p-8">
-        {/* SlideBar Button */}
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className={`fixed top-7 text-orange-400 left-10 p-2 z-50 bg-white rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] ${
-            isSidebarOpen ? "translate-x-[250px]" : ""
-          } transition-all duration-300 hover:scale-105`}
-        >
-          <RxHamburgerMenu size={24} />
-        </button>
-
-        <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-3 mb-8">
+     <SideBar className={"md:-translate-x-10"}/>
+        {/* Main Content */}
+        <div className="py-8 lg:ml-[2.5%] lg:w-[95%] max-sm:w-full max-sm:p-3">
+        <div className="p-8 max-sm:w-full max-sm:p-3">
           <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
           <Button>
             <Link to="/">Order Now</Link>

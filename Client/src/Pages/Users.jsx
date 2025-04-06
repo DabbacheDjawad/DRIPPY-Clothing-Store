@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Button from "../Components/Button";
-import { RxHamburgerMenu } from "react-icons/rx";
 import axios from "axios";
-import { FaShoppingCart } from "react-icons/fa";
-import { GiClothes } from "react-icons/gi";
-import { CiUser } from "react-icons/ci";
-import { ImProfile } from "react-icons/im";
 import {
   FiUserX,
   FiUserCheck,
@@ -14,13 +8,12 @@ import {
   FiUserPlus,
   FiUserMinus,
 } from "react-icons/fi";
-import { MdDashboard } from "react-icons/md";
+import SideBar from "../Components/SideBar";
 
 const Users = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [response, setResponse] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -94,87 +87,12 @@ const Users = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100 mt-40 max-md:overflow-x-hidden">
-      <div
-        className={`fixed inset-y-0 z-50 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
-          <nav>
-            <ul className="space-y-10 font-semibold">
-              <li>
-                <Link
-                  to="/admin"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    Dashboard <MdDashboard size={20} />
-                  </span>
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  to="/admin/products"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    <p className="w-[30%]">Products</p> <GiClothes size={20} />
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/orders"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    <p className="w-[30%]">orders</p>{" "}
-                    <FaShoppingCart size={20} />
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/users"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    <p className="w-[30%]">Users</p> <CiUser size={20} />
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/profile"
-                  className="block text-gray-700 hover:text-[#ff6c00] transition-all"
-                >
-                  <span className="flex gap-5 items-center">
-                    <p className="w-[30%]">Profile</p>
-                    <ImProfile size={20} />
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1">
-        {/* Sidebar Toggle Button */}
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className={`fixed top-4 left-4 p-2 z-50 hover:text-orange-500 transition-all duration-200 bg-white rounded-lg shadow-lg ${
-            isSidebarOpen ? "translate-x-[250px]" : ""
-          }`}
-        >
-          <RxHamburgerMenu size={24} />
-        </button>
-
-        {/* Dashboard Content */}
+      
+       {/* Side */}
+          <SideBar />
+        {/* Main Content */}
         <div className="py-8 lg:ml-[2.5%] lg:w-[95%] max-sm:w-full max-sm:p-3">
+        <div className="p-8 max-sm:w-full max-sm:p-3">
           <div className="flex justify-between items-center mb-6 max-sm:flex-col max-sm:items-start max-sm:gap-3">
             <h1 className="text-2xl font-bold max-sm:text-xl ml-3">
               User Management
