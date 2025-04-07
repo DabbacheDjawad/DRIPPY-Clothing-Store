@@ -3,11 +3,14 @@ import wilayas from "../Wilayas";
 import { useCart } from "../Context/CartContext";
 import Button from "../Components/Button";
 import axios from "axios";
+import { useState } from "react";
+import products from "../products";
 
 const Checkout = () => {
   const shipping = 700;
   const { cart } = useCart();  
   const token = localStorage.getItem("token");
+
   function calculateTotal() {
     return cart.reduce((total, element) => {
       return total + element.price * element.quantity;
@@ -16,22 +19,18 @@ const Checkout = () => {
 
   const total = calculateTotal();
   
-
   async function placeOrder(){
-    const formData = new FormData();
-    const products = [{}];
+    const cartProducts = Array(cart.length).fill().map(() => ({}));
     cart.map((item , index)=>{
-      products[index].product = item._id;
-      products[index].quantity = item.quantity
+        cartProducts[index].product = item._id
+        cartProducts[index].quantity = item.quantity
     });
-
-    formData.append("products", JSON.stringify(products));
     
     try{
-      await axios.post("http://localhost:3000/api/v1/orders" , {products : products , status : "pending"} ,
+      await axios.post("http://localhost:3000/api/v1/orders" , {products : cartProducts , status : "pending"} ,
         {headers: { Authorization: `Bearer ${token}` }}
       );
-      alert("qsfsdmfoj")
+      alert("Order Added Successfully")
     }catch(error){
       console.log(error);      
     }

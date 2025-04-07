@@ -18,7 +18,7 @@ const Home = () => {
   const [showMore , setShowMore] = useState(false)
   const [count , setCount] = useState(5)
   const [showValue , setShowValue] = useState("Show More");
-  
+
   //filters
   const [filters , setFilters] = useState(false)
   const [categoryFilter , setCategoryFilter] = useState("all");
@@ -90,8 +90,8 @@ const Home = () => {
 
   //sorting
   const sortedProducts = filteredProducts.sort((a, b) => {
-    if (sort === "price-ascending") return Number(a.price.split(" ")[0]) - Number(b.price.split(" ")[0]);
-    else if (sort === "price-descending") return Number(b.price.split(" ")[0]) - Number(a.price.split(" ")[0]);
+    if (sort === "price-ascending") return a.price - b.price;
+    else if (sort === "price-descending") return b.price - a.price;
   });
 
   function handleCount(){
@@ -99,6 +99,7 @@ const Home = () => {
     setShowMore(!showMore)
     showMore===true?setShowValue("Show Less"):setShowValue("Show More ");
   }
+
 
   return (
     <div>
@@ -201,7 +202,7 @@ const Home = () => {
               />
                 </Link>
               <p className="font-semibold ml-3">{product.name}</p>
-              <p className="text-green-400 ml-3">{product.price}</p>
+              <p className="text-green-400 ml-3">{product.price} DZD</p>
                   </li>
               ))}
             </ul>

@@ -135,9 +135,12 @@ const ShoppingCart = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-[#ff6c00] hover:bg-[#e65a00] text-white py-3 text-lg">
-                  <Link to="/checkout">Proceed to Checkout</Link>
-                </Button>
+                
+                  <Link to="/checkout">
+                    <Button className="w-full bg-[#ff6c00] hover:bg-[#e65a00] text-white py-3 text-lg">
+                    Proceed to Checkout
+                    </Button>
+                  </Link>
 
                 <p className="text-sm text-gray-500 mt-4 text-center">
                   Free shipping and returns
