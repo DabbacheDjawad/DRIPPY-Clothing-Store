@@ -46,7 +46,7 @@ const uploadAvatar = async (req , res)=>{
 const updateUser = async(req , res)=>{
     const {name , phone} = req.body;
 
-    if(!phone && name) throw new BadRequest("at least update one field");
+    if(!phone && !name) throw new BadRequest("at least update one field");
     const user = await User.findByIdAndUpdate({_id : req.params.id} , {name , phone} , {new:true})
     if(!user) throw new NotFound(`no user with the id : ${req.params.userID}`)
 
