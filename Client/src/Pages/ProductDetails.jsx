@@ -31,7 +31,7 @@ const ProductDetails = () => {
   useEffect(()=>{
     async function fetchProduct(){
       try{
-        const response = await axios.get(`http://localhost:3000/api/v1/products/${id}`);
+        const response = await axios.get(`https://drippy-clothing-store.onrender.com/api/v1/products/${id}`);
         setProduct(response.data.product);    
       }catch(error){
         console.log(error);

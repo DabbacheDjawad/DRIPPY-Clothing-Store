@@ -27,7 +27,7 @@ const Checkout = () => {
     });
     
     try{
-      await axios.post("http://localhost:3000/api/v1/orders" , {products : cartProducts , status : "pending"} ,
+      await axios.post("https://drippy-clothing-store.onrender.com/api/v1/orders" , {products : cartProducts , status : "pending"} ,
         {headers: { Authorization: `Bearer ${token}` }}
       );
       alert("Order Added Successfully")

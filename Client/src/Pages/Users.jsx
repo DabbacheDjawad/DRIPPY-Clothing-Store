@@ -20,7 +20,7 @@ const Users = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/users", {
+        const response = await axios.get("https://drippy-clothing-store.onrender.com/api/v1/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(response.data.users);
@@ -35,7 +35,7 @@ const Users = () => {
   const handleBlockUser = async (userId) => {
     try {
       await axios.patch(
-        `http://localhost:3000/api/v1/users/block/${userId}`,
+        `https://drippy-clothing-store.onrender.com/api/v1/users/block/${userId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -52,7 +52,7 @@ const Users = () => {
 
   async function handleRemoveUser(id) {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/users/${id}`, {
+      await axios.delete(`https://drippy-clothing-store.onrender.com/api/v1/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(users.filter((user) => user._id !== id));
@@ -63,7 +63,7 @@ const Users = () => {
 
   async function handleAdminSwitch(id) {
     try {
-      const response = await axios.patch(`http://localhost:3000/api/v1/users/switch/${id}`, {} , {
+      const response = await axios.patch(`https://drippy-clothing-store.onrender.com/api/v1/users/switch/${id}`, {} , {
         headers: { Authorization: `Bearer ${token}` },
       });
 

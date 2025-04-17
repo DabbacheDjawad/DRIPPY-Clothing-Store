@@ -30,7 +30,7 @@ const Profile = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/users/me",
+        "https://drippy-clothing-store.onrender.com/api/v1/users/me",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -46,7 +46,7 @@ const Profile = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/orders/me",
+        "https://drippy-clothing-store.onrender.com/api/v1/orders/me",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -59,7 +59,7 @@ const Profile = () => {
 
    const handleUpdateProfile = async (id) => {
      try {
-       await axios.patch(`http://localhost:3000/api/v1/users/${id}`, user, {
+       await axios.patch(`https://drippy-clothing-store.onrender.com/api/v1/users/${id}`, user, {
          headers: { Authorization: `Bearer ${token}` },
        });
        setIsEditing(false);
@@ -84,7 +84,7 @@ const handleLogout = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/users/avatar",
+        "https://drippy-clothing-store.onrender.com/api/v1/users/avatar",
         formData,
         {
           headers: {

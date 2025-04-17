@@ -29,10 +29,10 @@ const AdminDashboard = () => {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const productRes = await axios.get("http://localhost:3000/api/v1/products");
-        const ordersRes = await axios.get("http://localhost:3000/api/v1/orders", 
+        const productRes = await axios.get("https://drippy-clothing-store.onrender.com/api/v1/products");
+        const ordersRes = await axios.get("https://drippy-clothing-store.onrender.com/api/v1/orders", 
           { headers: { Authorization: `Bearer ${token}` } });
-        const usersRes = await axios.get("http://localhost:3000/api/v1/users",
+        const usersRes = await axios.get("https://drippy-clothing-store.onrender.com/api/v1/users",
           { headers: { Authorization: `Bearer ${token}` } });
 
         setOrders(ordersRes.data.orders);

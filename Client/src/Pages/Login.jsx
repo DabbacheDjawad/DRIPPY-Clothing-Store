@@ -27,7 +27,7 @@ const Login = () => {
           try{
             const token = localStorage.getItem("token")        
     
-            const {data} = await axios.post("http://localhost:3000/api/v1/auth/login",{email , password},
+            const {data} = await axios.post("https://drippy-clothing-store.onrender.com/api/v1/auth/login",{email , password},
              { headers : {
                 Authorization : `Bearer ${token}`
               }}

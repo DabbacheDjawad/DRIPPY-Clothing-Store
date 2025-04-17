@@ -30,7 +30,7 @@ const AdminProductDetails = () => {
       const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/products/${id}`
+          `http://https://drippy-clothing-store.onrender.com/api/v1/api/v1/products/${id}`
         );
         setProduct(response.data.product);
             
@@ -77,7 +77,7 @@ const AdminProductDetails = () => {
     e.preventDefault();
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/v1/products/${id}`,
+        `https://drippy-clothing-store.onrender.com/api/v1/products/${id}`,
         formData
       );
       setProduct(response.data.product);
@@ -92,7 +92,7 @@ const AdminProductDetails = () => {
   // Delete product
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/products/${id}`);
+      await axios.delete(`https://drippy-clothing-store.onrender.com/api/v1/products/${id}`);
       navigate("/admin/products");
     } catch (err) {
       console.log(err); 

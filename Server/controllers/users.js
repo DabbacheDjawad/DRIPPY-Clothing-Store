@@ -19,7 +19,7 @@ const getUser = async(req , res)=>{
 }
 
 //get current user
-const getCurrentUser = async(req , res)=>{
+const getCurrentUser = async(req , res)=>{  
     const user = await User.findById({_id : req.user.userID}).select("-password");
     if(!user) throw new NotFound("not logged in")
     res.status(StatusCodes.OK).json({user});

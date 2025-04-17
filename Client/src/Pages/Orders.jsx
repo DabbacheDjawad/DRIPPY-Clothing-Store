@@ -15,7 +15,7 @@ const OrdersPage = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/orders`,
+          `https://drippy-clothing-store.onrender.com/api/v1/orders`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -46,7 +46,7 @@ const OrdersPage = () => {
   async function deleteOrder(id) {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/v1/orders/${id}`,
+        `https://drippy-clothing-store.onrender.com/api/v1/orders/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

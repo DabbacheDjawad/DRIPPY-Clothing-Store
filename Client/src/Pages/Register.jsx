@@ -18,7 +18,7 @@ const Register = () => {
     async function handleRegister(e){
     e.preventDefault()
         try{
-            const {data} = await axios.post("http://localhost:3000/api/v1/auth/register",{name , email , password});
+            const {data} = await axios.post("https://drippy-clothing-store.onrender.com/api/v1/auth/register",{name , email , password});
             //setting token in localStorage
             localStorage.setItem("token" , data.token);
             setResponse("User Registered...")

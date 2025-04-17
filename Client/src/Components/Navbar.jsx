@@ -32,7 +32,7 @@ const Navbar = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/users/me",
+        "https://drippy-clothing-store.onrender.com/api/v1/users/me",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

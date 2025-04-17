@@ -33,7 +33,7 @@ const ProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products");
+        const response = await axios.get("https://drippy-clothing-store.onrender.com/api/v1/products");
         setProducts(response.data.products);  
       } catch (err) {
         if(err.status === 404) setError("error while fetching products");
