@@ -80,7 +80,7 @@ const AddProduct = () => {
 
     try {
       const res = await axios.post(
-        "https://drippy-clothing-store.onrender.com/api/v1/api/v1/products",
+        "https://drippy-clothing-store.onrender.com/api/v1/products",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
