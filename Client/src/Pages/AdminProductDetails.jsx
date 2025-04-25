@@ -30,7 +30,7 @@ const AdminProductDetails = () => {
       const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://https://drippy-clothing-store.onrender.com/api/v1/products/${id}`
+          `https://drippy-clothing-store.onrender.com/api/v1/products/${id}`
         );
         setProduct(response.data.product);
             
