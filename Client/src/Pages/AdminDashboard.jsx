@@ -109,8 +109,9 @@ const AdminDashboard = () => {
           </div>
 
           {/* Latest Products */}
-          <div className="mb-8 w-[95%]">
-            <div className=" w-full flex items-center justify-between mb-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+          <div className="mb-8 w-[95%] max-sm:w-full">
+            <div className=" w-full flex items-center justify-between mb-3 max-sm:flex-col max-sm:items-start
+             max-sm:gap-2">
               <h2 className="text-xl font-bold max-sm:text-lg">Latest Products</h2>
               <Link to={"/admin/products"}>
                 <Button>
@@ -119,7 +120,7 @@ const AdminDashboard = () => {
               </Link>
             </div>
 
-            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-auto">
+            <div className="bg-gray-50 p-3 rounded-lg shadow-sm max-sm:overflow-x-hidden">
               <div className="min-w-[300px]">
                 <div className="grid grid-cols-4 gap-2 max-sm:text-xs font-bold border-b pb-2">
                   <div>ID</div>
@@ -159,7 +160,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Latest Orders */}
-          <div className="mb-8 w-[95%]">
+          <div className="mb-8 w-[95%] max-sm:w-full">
             <div className="flex justify-between mb-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
               <h2 className="text-2xl font-bold max-sm:text-lg">Latest Orders</h2>
               <Link to={"/admin/orders"}>
@@ -167,43 +168,57 @@ const AdminDashboard = () => {
               </Link>
             </div>
             
-            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-auto">
+            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-hidden">
               <div className="min-w-[320px]">
-                <div className="grid grid-cols-5 gap-2 text-xl max-sm:text-xs font-bold border-b pb-2">
-                  <div>Order</div>
+                <div className="grid grid-cols-5 max-sm:grid-cols-3 gap-2 text-xl max-sm:text-xs font-bold border-b pb-2">
+                  <div className="max-sm:hidden">Order</div>
                   <div>Customer</div>
                   <div>Items</div>
-                  <div>Status</div>
+                  <div className="max-sm:hidden">Status</div>
                   <div>Total</div>
                 </div>
 
                 {orders.slice(0, 5).map((order) => (
-                  <div key={order._id} className="grid grid-cols-5 gap-2 py-2 border-b border-gray-200 max text-xl-sm:text-xs items-center">
-                    <div className="truncate text-xl">#{order._id.slice(-6)}</div>
-                    <div className="truncate">{order.user?.name?.split(' ')[0] || 'N/A'}</div>
-                    <div className="ml-[10%]">{order.products.length}</div>
-                    <div>
-                      <span className={`px-1 py-0.5 rounded-full max-sm:text-[10px] ${
-                        order.status === "shipped" ? "bg-blue-100 text-blue-800" :
-                        order.status === "delivered" ? "bg-green-100 text-green-800" :
-                        "bg-yellow-100 text-yellow-800"
-                      }`}>
-                        {order.status}
-                      </span>
-                    </div>
-                    <div className="text-green-500 font-semibold">${(
-                      order.products.reduce((sum, product) => {
-                        return sum + (product.product?.price || 0) * product.quantity;
-                      }, 0)
-                    ).toFixed(2)}</div>
-                  </div>
-                ))}
+  <div 
+    key={order._id} 
+    className="grid grid-cols-5 py-2 border-b border-gray-200 text-xs sm:text-base items-center gap-1 sm:gap-4"
+  >
+    <div className="truncate max-sm:hidden">#{order._id.slice(-4)}</div>
+    
+    {/* Customer Name */}
+    <div className="truncate">
+      {order.user?.name?.split(' ')[0] || 'N/A'}
+    </div>
+    
+    <div className="text-center md:mr-[60%] max-md:ml-[70%]">
+      {order.products.length}
+    </div>
+    
+    <div>
+      <span className={`px-1 py-0.5 rounded-full text-[10px] sm:text-xs max-sm:hidden ${
+        order.status === "shipped" ? "bg-blue-100 text-blue-800" :
+        order.status === "delivered" ? "bg-green-100 text-green-800" :
+        "bg-yellow-100 text-yellow-800"
+      }`}>
+        {order.status}
+      </span>
+    </div>
+    
+    <div className="text-right font-semibold text-green-500 whitespace-nowrap">
+      ${(
+        order.products.reduce((sum, product) => {
+          return sum + (product.product?.price || 0) * product.quantity;
+        }, 0)
+      ).toFixed(2)}
+    </div>
+  </div>
+))}
               </div>
             </div>
           </div>
 
           {/* Latest Users */}
-          <div className="w-[95%]">
+          <div className="w-[95%] max-sm:w-full">
             <div className="flex justify-between mb-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
               <h2 className="text-2xl font-bold max-sm:text-lg">Latest Users</h2>
               <Link to={"/admin/users"}>
@@ -211,7 +226,7 @@ const AdminDashboard = () => {
               </Link>
             </div>
             
-            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-auto">
+            <div className="bg-gray-50 p-3 rounded-lg shadow-sm overflow-x-hidden">
               <div className="min-w-[280px]">
                 <div className="grid grid-cols-4 gap-2 text-xs font-bold border-b pb-2">
                   <div>User ID</div>
@@ -225,7 +240,7 @@ const AdminDashboard = () => {
                     <div className="truncate">#{user._id.slice(-6)}</div>
                     <div className="truncate">{user.name}</div>
                     <div className="truncate">{user.email.split('@')[0]}...</div>
-                    <div className="capitalize text-[#ff6c00] font-semibold">{user.role}</div>
+                    <div className="capitalize truncate text-[#ff6c00] font-semibold">{user.role}</div>
                   </div>
                 ))}
               </div>
