@@ -97,7 +97,9 @@ const Login = () => {
                 >{`${response}`}</p>
 
             </div>
-            {response ==="User Logged In..." ? setTimeout(()=>handleNavigation("") , 2000):""}
+            {response ==="User Logged In..." ? setTimeout(
+                ()=>{handleNavigation("") , 2000 ; window.location.reload();}
+                ):""}
         </div>
     );
 };
