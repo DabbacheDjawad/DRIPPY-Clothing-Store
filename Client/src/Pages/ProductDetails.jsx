@@ -11,35 +11,38 @@ import { useCart } from "../Context/CartContext";
 import axios from "axios";
 
 const ProductDetails = () => {
-  const {id} = useParams();
-  
+  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [product, setProduct] = useState({
-    name: '',
-    description: '',
-    category: '',
+    name: "",
+    description: "",
+    category: "",
     price: 0,
     available: false,
     image: [],
-    availableSizes: []
+    availableSizes: [],
   });
-  const { addToCart } = useCart(); // add to cart function
+  const { addToCart } = useCart();
   const swiperRef = useRef(null);
   let [quantity, setQuantity] = useState(1);
   let [prSize, setSize] = useState("S");
 
-  
-  useEffect(()=>{
-    async function fetchProduct(){
-      try{
-        const response = await axios.get(`https://drippy-clothing-store.onrender.com/api/v1/products/${id}`);
-        setProduct(response.data.product);    
-      }catch(error){
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          `https://drippy-clothing-store.onrender.com/api/v1/products/${id}`
+        );
+        setProduct(response.data.product);
+      } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    console.log(product);
-    fetchProduct()
-  } , [])
+    fetchProduct();
+  }, [id]);
 
   function handleQuantity(e) {
     setQuantity(Number(e.target.value));
@@ -64,8 +67,21 @@ const ProductDetails = () => {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 border-4 border-[#ff6c00] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-lg font-medium text-gray-700">
+            Loading product details...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 py-20">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 py-20 mt-30">
       <div className="bg-white p-8 rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] w-full max-w-6xl">
         {/* Breadcrumb Navigation */}
         <div className="flex gap-2 text-sm text-gray-600 mb-6">
@@ -98,7 +114,7 @@ const ProductDetails = () => {
                   <img
                     src={img.url}
                     alt={product.name}
-                    className="w-full h-auto rounded-lg border border-gray-200"
+                    className="max-md:w-full max-md:ml-0 max-lg:w-[60%] max-lg:ml-[10%] rounded-lg border border-gray-200"
                   />
                 </SwiperSlide>
               ))}
@@ -111,22 +127,32 @@ const ProductDetails = () => {
             <p className="text-gray-600 mb-4">{product.description}</p>
             <div className="space-y-4">
               <p className="text-lg">
-                <span className="font-semibold">Category:</span> {product.category}
+                <span className="font-semibold">Category:</span>{" "}
+                {product.category}
               </p>
               <p className="text-lg">
                 <span className="font-semibold">Available Sizes:</span>{" "}
                 {product.availableSizes.join(", ")}
               </p>
-              <p className={`text-lg ${product.available ? "text-green-500" : "text-red-600"}`}>
+              <p
+                className={`text-lg ${
+                  product.available ? "text-green-500" : "text-red-600"
+                }`}
+              >
                 {product.available ? "Available in Stock" : "Sold Out"}
               </p>
-              <p className="text-green-500 text-lg font-semibold">{product.price}</p>
+              <p className="text-green-500 text-lg font-semibold">
+                {product.price}
+              </p>
             </div>
 
             {/* Size and Quantity Selection */}
             <div className="mt-6 space-y-6">
               <div>
-                <label htmlFor="sizes" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="sizes"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Size
                 </label>
                 <select
@@ -142,7 +168,10 @@ const ProductDetails = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="quantity"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Quantity
                 </label>
                 <input

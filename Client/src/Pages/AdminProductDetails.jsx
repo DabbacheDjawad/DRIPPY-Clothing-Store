@@ -10,8 +10,10 @@ const AdminProductDetails = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const[currentImage , setCurrentImage] = useState("")
-  
+  const [currentImage, setCurrentImage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Form state for editing
   const [formData, setFormData] = useState({
@@ -27,8 +29,9 @@ const AdminProductDetails = () => {
 
   // Fetch product details
   useEffect(() => {
-      const fetchProduct = async () => {
+    const fetchProduct = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(
           `https://drippy-clothing-store.onrender.com/api/v1/products/${id}`
         );
@@ -42,16 +45,16 @@ const AdminProductDetails = () => {
           availableSizes: response.data.product.availableSizes || [],
           available: response.data.product.available,
         });
-        setCurrentImage(response.data.product.image[0].url);
+        setCurrentImage(response.data.product.image[0]?.url || "");
       } catch (err) {
         console.log(err);
-        
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchProduct();
-  }, []);
-
+  }, [id]);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -76,36 +79,59 @@ const AdminProductDetails = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
+      setIsUpdating(true);
       const response = await axios.patch(
         `https://drippy-clothing-store.onrender.com/api/v1/products/${id}`,
         formData
       );
       setProduct(response.data.product);
       setIsEditing(false);
-      alert(`${product.name} Updated Successfully`)
+      alert(`${product.name} Updated Successfully`);
     } catch (err) {
-        console.log(err);
-        
+      console.log(err);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   // Delete product
   const handleDelete = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${product.name}?`)) return;
+    
     try {
+      setIsDeleting(true);
       await axios.delete(`https://drippy-clothing-store.onrender.com/api/v1/products/${id}`);
       navigate("/admin/products");
     } catch (err) {
-      console.log(err); 
+      console.log(err);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
+  // Loading state
+  if (isLoading || isUpdating || isDeleting) {
+    return (
+      <div className="flex min-h-screen bg-gray-100 items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 border-4 border-[#ff6c00] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-lg font-medium text-gray-700">
+            {isLoading && "Loading product details..."}
+            {isUpdating && "Updating product..."}
+            {isDeleting && "Deleting product..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-100 mt-40">
-      {/* Sidebar (same as your other pages) */}
-      <SideBar />
+      {/* Sidebar */}
+      <SideBar className={"md:-translate-x-5"} />
 
-        {/* Main Content */}
-        <div className="py-8 lg:ml-[2.5%] lg:w-[95%] max-sm:w-full max-sm:p-3">
+      {/* Main Content */}
+      <div className="py-8 lg:ml-[2.5%] lg:w-[95%] max-sm:w-full max-sm:p-3">
         <div className="p-8 max-sm:w-full max-sm:p-3">
           {/* Header with actions */}
           <div className="flex justify-between items-center mb-8">
@@ -113,13 +139,19 @@ const AdminProductDetails = () => {
               Product Details
             </h1>
             <div className="flex gap-3 max-sm:text-sm">
-              <Button onClick={() => setIsEditing(!isEditing)}>
+              <Button 
+                onClick={() => setIsEditing(!isEditing)}
+                disabled={isUpdating || isDeleting}
+              >
                 <span className="flex items-center gap-2">
                   {isEditing ? "Cancel" : "Edit"} <FiEdit />
                 </span>
               </Button>
-              <Button>
-                <span className="flex items-center gap-2" onClick={handleDelete}>
+              <Button 
+                onClick={handleDelete}
+                disabled={isUpdating || isDeleting}
+              >
+                <span className="flex items-center gap-2">
                   Delete <FiTrash2 />
                 </span>
               </Button>
@@ -226,13 +258,13 @@ const AdminProductDetails = () => {
                 </div>
 
                 <div className="pt-4">
-                  <Button type="submit">Update Product</Button>
+                  <Button type="submit" disabled={isUpdating}>
+                    {isUpdating ? "Updating..." : "Update Product"}
+                  </Button>
                 </div>
               </form>
             ) : (
               <div className="grid md:grid-cols-2 gap-8">
-
-
                 {/* Image Gallery */}
                 <div>
                   <div className="mb-4 h-96 bg-gray-100 rounded-lg overflow-hidden">
@@ -240,7 +272,7 @@ const AdminProductDetails = () => {
                       <img
                         src={currentImage}
                         alt={product.name}
-                        className="w-4/5 h-[98%] ml-[10%]"
+                        className="w-4/5 h-[98%] ml-[10%] object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -255,13 +287,12 @@ const AdminProductDetails = () => {
                           src={img.url}
                           alt={`${product.name} ${index + 1}`}
                           className="w-full h-full object-cover rounded border border-gray-200 cursor-pointer"
-                          onClick={()=>setCurrentImage(img.url)}
+                          onClick={() => setCurrentImage(img.url)}
                         />
                       </div>
                     ))}
                   </div>
                 </div>
-
 
                 {/* Product Info */}
                 <div>

@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Button from "../Components/Button";
 import SideBar from "../Components/SideBar";
+
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
-  let [total , setTotal] = useState([]);
-  const [response , setResponse] = useState("");
+  const [total, setTotal] = useState(0);
+  const [response, setResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const token = localStorage.getItem("token");
 
@@ -14,6 +16,7 @@ const OrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(
           `https://drippy-clothing-store.onrender.com/api/v1/orders`,
           {
@@ -23,29 +26,33 @@ const OrdersPage = () => {
         setOrders(response.data.orders);
         setResponse("");
       } catch (err) {
-        setResponse(err.response.data.message);
+        setResponse(err.response?.data?.message || "Failed to fetch orders.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchOrders();
   }, []);
 
-
-  //calculating total
+  // Calculating total
   useEffect(() => {
     const calculatedTotal = orders.reduce((sum, order) => {
-      return sum + order.products.reduce((orderSum, product) => {
-        return orderSum + (product.product?.price || 0) * product.quantity;
-      }, 0);
+      return (
+        sum +
+        order.products.reduce((orderSum, product) => {
+          return orderSum + (product.product?.price || 0) * product.quantity;
+        }, 0)
+      );
     }, 0);
-  
+
     setTotal(calculatedTotal);
   }, [orders]);
 
-  //delete Order
+  // Delete Order
   async function deleteOrder(id) {
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `https://drippy-clothing-store.onrender.com/api/v1/orders/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -57,13 +64,25 @@ const OrdersPage = () => {
     }
   }
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen bg-gray-100 items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 border-4 border-[#ff6c00] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-lg font-medium text-gray-700">Loading orders...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-100 mt-40 w-[95%] md:ml-10">
-      
       {/* Sidebar */}
-     <SideBar className={"md:-translate-x-10"}/>
-        {/* Main Content */}
-        <div className="py-8 lg:ml-[2.5%] lg:w-[95%] max-sm:w-full max-sm:p-3">
+      <SideBar className={"md:-translate-x-5"} />
+
+      {/* Main Content */}
+      <div className="py-8 lg:ml-[2.5%] lg:w-[95%] max-sm:w-full max-sm:p-3">
         <div className="p-8 max-sm:w-full max-sm:p-3">
           <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
           <Button>
@@ -71,9 +90,13 @@ const OrdersPage = () => {
           </Button>
         </div>
 
+        {response && (
+          <div className="text-red-500 text-center my-4">{response}</div>
+        )}
+
         {/* Orders Grid */}
         <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-6">
-          {orders && orders.map((order) => (
+          {orders.map((order) => (
             <div
               key={order._id}
               className="bg-white p-6 rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.1)] hover:shadow-[0_15px_30px_-5px_rgba(151,65,252,0.2)] transition-all"
@@ -105,64 +128,50 @@ const OrdersPage = () => {
                 </span>
               </div>
 
-              {/* Customer Section */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-1">
-                  CUSTOMER
-                </h3>
-                <p className="text-gray-800 font-medium">
-                  {order.user?.name || "Guest User"}
-                </p>
+              {/* Products */}
+              <div className="space-y-2">
+                {order.products.map((productWrapper, idx) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between text-sm text-gray-700"
+                  >
+                    <span>
+                      {productWrapper.product?.name || "Unnamed Product"} x{" "}
+                      {productWrapper.quantity}
+                    </span>
+                    <span>
+                      {(productWrapper.product?.price || 0) *
+                        productWrapper.quantity}{" "}
+                      DZD
+                    </span>
+                  </div>
+                ))}
               </div>
 
-              {/* Products Section */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">
-                  PRODUCTS
-                </h3>
-                <div className="space-y-3">
-                  {order.products.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="text-gray-800">
-                        {item.product?.name || "Deleted Product"}
-                      </span>
-                      <span className="text-gray-500 text-sm">
-                        x{item.quantity} - $
-                        {(item.product?.price || 0) * item.quantity}
-                      </span>
-                      
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* TOTAL */}
-              <div className="flex justify-between">
-                <p className="mb-2">Total : </p>
-                <p className="font-semibold text-orange-500">{`${total}`}</p>
-              </div>
-              {/* Actions */}
-              <div className="flex justify-end space-x-4 pt-4 border-t">
+              {/* Footer */}
+              <div className="mt-4 flex justify-between items-center">
+                <span className="text-sm text-gray-500">
+                  Total:{" "}
+                  {order.products.reduce((sum, p) => {
+                    return sum + (p.product?.price || 0) * p.quantity;
+                  }, 0)}{" "}
+                  DZD
+                </span>
                 <button
                   onClick={() => deleteOrder(order._id)}
-                  className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors"
+                  className="text-sm text-red-600 hover:underline"
                 >
-                  Cancel Order
+                  Delete
                 </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Empty State */}
-        {orders.length === 0 && (
-          <div className="bg-white p-8 rounded-lg shadow-[0_15px_30px_-5px_rgba(151,65,252,0.1)] text-center">
-            <p className="text-gray-500">{response}</p>
-          </div>
-        )}
+        {/* Total Summary */}
+        <div className="text-xl font-semibold text-right mt-8 mr-6 text-gray-800">
+          Total Revenue: {total} DZD
+        </div>
       </div>
     </div>
   );
