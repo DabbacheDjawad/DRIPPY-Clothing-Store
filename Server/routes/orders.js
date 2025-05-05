@@ -10,8 +10,8 @@ const {
 } = require("../controllers/orders");
 const { authMiddleware, adminAuth } = require("../middleware/authentication");
 
-router.route("/").get(getAllOrders , authMiddleware)
-router.route("/").post(createOrder);
+router.route("/", authMiddleware , getAllOrders)
+router.post("/"  , authMiddleware , createOrder)
 router.route("/:id").patch(updateOrder).delete(deleteOrder , authMiddleware , adminAuth);
 router.route("/me").get(getCurrentUserOrders , authMiddleware);
 

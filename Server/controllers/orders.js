@@ -24,6 +24,7 @@ const getCurrentUserOrders = async (req , res)=>{
 //Create Order
 const createOrder = async (req , res)=>{
     const {products , status} = req.body;
+    
     const userId = req.user.userID;
     if(!status) throw new BadRequest("Please provide the status");
 
